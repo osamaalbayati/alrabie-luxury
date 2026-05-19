@@ -4,7 +4,7 @@ import { ShoppingBag, Utensils } from "lucide-react";
 import type { CategoryId, MenuCategory } from "../data/menuData";
 
 type HeaderProps = {
-  categories: MenuCategory[];
+  categories: readonly MenuCategory[];
   activeCategory: CategoryId;
   cartCount: number;
   onCartClick: () => void;
@@ -16,7 +16,7 @@ export default function Header({
   activeCategory,
   cartCount,
   onCartClick,
-  onCategorySelect
+  onCategorySelect,
 }: HeaderProps) {
   const scrollToHero = () => {
     document.getElementById("hero")?.scrollIntoView({ behavior: "smooth" });
@@ -40,7 +40,9 @@ export default function Header({
           </span>
           <span className="hidden leading-tight sm:block">
             <span className="block text-lg font-black text-white">الربيع</span>
-            <span className="block text-[0.68rem] font-semibold text-white/55">مطعم عربي فاخر</span>
+            <span className="block text-[0.68rem] font-semibold text-white/55">
+              مطعم عربي فاخر
+            </span>
           </span>
         </button>
 
@@ -52,6 +54,7 @@ export default function Header({
           >
             المنيو
           </button>
+
           {categories.map((category) => {
             const isActive = activeCategory === category.id;
 
