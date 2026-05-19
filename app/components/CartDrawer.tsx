@@ -2,11 +2,13 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { Minus, Plus, Send, ShoppingBag, Trash2, X } from "lucide-react";
-import type { MenuItem } from "../data/menuData";
+import type { MenuItem, MenuItemOption } from "../data/menuData";
 import { formatIQD, restaurantInfo } from "../data/menuData";
 
 export type CartLine = {
+  id: string;
   product: MenuItem;
+  selectedOption?: MenuItemOption;
   quantity: number;
 };
 
@@ -15,9 +17,9 @@ type CartDrawerProps = {
   items: CartLine[];
   whatsappPhone: string;
   onClose: () => void;
-  onIncrement: (productId: string) => void;
-  onDecrement: (productId: string) => void;
-  onRemove: (productId: string) => void;
+  onIncrement: (lineId: string) => void;
+  onDecrement: (lineId: string) => void;
+  onRemove: (lineId: string) => void;
 };
 
 type CustomerInfo = {
@@ -46,7 +48,12 @@ export default function CartDrawer({
   const [customer, setCustomer] = useState<CustomerInfo>(emptyCustomer);
 
   const total = useMemo(
-    () => items.reduce((sum, item) => sum + item.product.price * item.quantity, 0),
+    () =>
+      items.reduce(
+        (sum, item) =>
+          sum + (item.selectedOption?.price ?? item.product.price) * item.quantity,
+        0
+      ),
     [items]
   );
 
@@ -76,8 +83,12 @@ export default function CartDrawer({
 
   const buildOrderText = () => {
     const itemLines = items.map((item, index) => {
-      const lineTotal = item.product.price * item.quantity;
-      return `🍴 ${index + 1}. ${item.product.name} × ${item.quantity} = ${formatIQD(
+      const itemPrice = item.selectedOption?.price ?? item.product.price;
+      const itemLabel = item.selectedOption
+        ? `${item.product.name} (${item.selectedOption.label})`
+        : item.product.name;
+      const lineTotal = itemPrice * item.quantity;
+      return `🍴 ${index + 1}. ${itemLabel} × ${item.quantity} = ${formatIQD(
         lineTotal
       )}`;
     });
@@ -182,62 +193,70 @@ export default function CartDrawer({
           <>
             <div className="hide-scrollbar flex-1 overflow-y-auto px-5 py-5">
               <div className="space-y-3">
-                {items.map((item) => (
-                  <div
-                    key={item.product.id}
-                    className="rounded-3xl border border-white/10 bg-white/[0.055] p-4"
-                  >
-                    <div className="flex items-start justify-between gap-3">
-                      <div className="min-w-0">
-                        <h3 className="font-black leading-7 text-white">
-                          {item.product.name}
-                        </h3>
-                        <p className="mt-1 text-sm text-white/50">
-                          {formatIQD(item.product.price)}
+                {items.map((item) => {
+                  const itemPrice = item.selectedOption?.price ?? item.product.price;
+                  return (
+                    <div
+                      key={item.id}
+                      className="rounded-3xl border border-white/10 bg-white/[0.055] p-4"
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="min-w-0">
+                          <h3 className="font-black leading-7 text-white">
+                            {item.product.name}
+                            {item.selectedOption ? (
+                              <span className="block text-sm font-semibold text-white/50">
+                                {item.selectedOption.label}
+                              </span>
+                            ) : null}
+                          </h3>
+                          <p className="mt-1 text-sm text-white/50">
+                            {formatIQD(itemPrice)}
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={() => onRemove(item.id)}
+                          className="grid h-10 w-10 place-items-center rounded-2xl border border-white/10 bg-black/20 text-white/55 transition hover:border-red-400/60 hover:text-red-300"
+                          aria-label={`حذف ${item.product.name}`}
+                        >
+                          <Trash2 size={17} />
+                        </button>
+                      </div>
+
+                      <div className="mt-4 flex items-center justify-between gap-3">
+                        <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/25 p-1">
+                          <button
+                            type="button"
+                            onClick={() => onIncrement(item.id)}
+                            className="grid h-10 w-10 place-items-center rounded-xl bg-white text-black transition hover:bg-green-400"
+                            aria-label={`زيادة ${item.product.name}`}
+                          >
+                            <Plus size={17} />
+                          </button>
+
+                          <span className="grid h-10 min-w-10 place-items-center px-2 text-base font-black text-white">
+                            {item.quantity}
+                          </span>
+
+                          <button
+                            type="button"
+                            onClick={() => onDecrement(item.id)}
+                            className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-white transition hover:bg-white/15"
+                            aria-label={`تقليل ${item.product.name}`}
+                          >
+                            <Minus size={17} />
+                          </button>
+                        </div>
+
+                        <p className="text-sm font-black text-green-400">
+                          {formatIQD(itemPrice * item.quantity)}
                         </p>
                       </div>
-
-                      <button
-                        type="button"
-                        onClick={() => onRemove(item.product.id)}
-                        className="grid h-10 w-10 place-items-center rounded-2xl border border-white/10 bg-black/20 text-white/55 transition hover:border-red-400/60 hover:text-red-300"
-                        aria-label={`حذف ${item.product.name}`}
-                      >
-                        <Trash2 size={17} />
-                      </button>
                     </div>
-
-                    <div className="mt-4 flex items-center justify-between gap-3">
-                      <div className="flex items-center gap-2 rounded-2xl border border-white/10 bg-black/25 p-1">
-                        <button
-                          type="button"
-                          onClick={() => onIncrement(item.product.id)}
-                          className="grid h-10 w-10 place-items-center rounded-xl bg-white text-black transition hover:bg-green-400"
-                          aria-label={`زيادة ${item.product.name}`}
-                        >
-                          <Plus size={17} />
-                        </button>
-
-                        <span className="grid h-10 min-w-10 place-items-center px-2 text-base font-black text-white">
-                          {item.quantity}
-                        </span>
-
-                        <button
-                          type="button"
-                          onClick={() => onDecrement(item.product.id)}
-                          className="grid h-10 w-10 place-items-center rounded-xl bg-white/10 text-white transition hover:bg-white/15"
-                          aria-label={`تقليل ${item.product.name}`}
-                        >
-                          <Minus size={17} />
-                        </button>
-                      </div>
-
-                      <p className="text-sm font-black text-green-400">
-                        {formatIQD(item.product.price * item.quantity)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="mt-6 rounded-[32px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.03] p-5 shadow-[0_10px_50px_rgba(0,0,0,0.45)] backdrop-blur-2xl">

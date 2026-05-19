@@ -18,6 +18,13 @@ export interface MenuCategory {
   readonly image: string;
 }
 
+export interface MenuItemOption {
+  readonly id: string;
+  readonly label: string;
+  readonly price: number;
+  readonly description?: string;
+}
+
 export interface MenuItem {
   readonly id: string;
   readonly categoryId: CategoryId;
@@ -26,6 +33,7 @@ export interface MenuItem {
   readonly price: number;
   readonly notes?: string;
   readonly badge?: string;
+  readonly options?: readonly MenuItemOption[];
 }
 
 export interface MenuGroup {
@@ -92,6 +100,7 @@ interface ItemOptions {
   description?: string;
   notes?: string;
   badge?: string;
+  options?: readonly MenuItemOption[];
 }
 
 const createItem = (
@@ -108,6 +117,7 @@ const createItem = (
   description: options?.description ?? defaultDescriptions[categoryId],
   notes: options?.notes,
   badge: options?.badge,
+  options: options?.options,
 });
 
 const grillSides = "طماطم مشوية، بصل مشوي، صلصة الضبعة الخاصة، ثومية، بلواز، لهانة حمراء، ريحان، عيش لبناني.";
@@ -224,12 +234,41 @@ export const products: readonly MenuItem[] = [
   // 4. المشاوي والمقبلات (Grills & Appetizers)
   // ==========================================
   // المشاوي أشياش
+  createItem("grills", "kebab-meat", "شيش كباب لحم", 4500, {
+    description: grillSides,
+    options: [
+      { id: "250g", label: "250 غرام", price: 4500 },
+      { id: "500g", label: "500 غرام", price: 9000 },
+      { id: "1kg", label: "1 كيلو", price: 18000 },
+    ],
+  }),
+  createItem("grills", "kebab-chicken", "شيش كباب دجاج", 4500, {
+    description: grillSides,
+    options: [
+      { id: "250g", label: "250 غرام", price: 4500 },
+      { id: "500g", label: "500 غرام", price: 9000 },
+      { id: "1kg", label: "1 كيلو", price: 18000 },
+    ],
+  }),
   createItem("grills", "tikka-chicken", "شيش تكة دجاج", 3000, { description: grillSides }),
-  createItem("grills", "kebab-chicken", "شيش كباب دجاج", 3000, { description: grillSides }),
-  createItem("grills", "kebab-meat", "شيش كباب لحم", 3000, { description: grillSides }),
-  createItem("grills", "tawook", "شيش طاووق", 3000, { description: grillSides }),
-  createItem("grills", "wings", "شيش أجنحة", 3000, { description: grillSides }),
-  createItem("grills", "drumstick", "شيش عصى طبل", 3000, { description: grillSides }),
+  createItem("grills", "tawook", "شيش طاووق", 3000, {
+    description: grillSides,
+    options: [
+      { id: "kilo", label: "الكيلو", price: 14000 },
+    ],
+  }),
+  createItem("grills", "wings", "شيش أجنحة", 3000, {
+    description: grillSides,
+    options: [
+      { id: "kilo", label: "الكيلو", price: 14000 },
+    ],
+  }),
+  createItem("grills", "drumstick", "شيش عصى طبل", 3000, {
+    description: grillSides,
+    options: [
+      { id: "kilo", label: "الكيلو", price: 14000 },
+    ],
+  }),
   
   // الكبة المشوية والمشروبات
   createItem("grills", "kibbeh-grilled", "كبة مشوية", 2000, { notes: "Kibbeh" }),
@@ -244,13 +283,6 @@ export const products: readonly MenuItem[] = [
     description: "دجاجة كاملة مشوية على الفحم بتتبيلة لبنانية | طماطم مشوية | بصل مشوي | صلصة الضبعة الخاصة | ثومية | بلواز | لهانة حمراء | ريحان | عيش لبناني.",
   }),
 
-  // كيلوات مشاوي
-  createItem("grills", "kilo-kebab-meat", "كيلو كباب لحم", 20000, { description: grillKiloSides }),
-  createItem("grills", "kilo-kebab-chicken", "كيلو كباب دجاج", 18000, { description: grillKiloSides }),
-  createItem("grills", "kilo-wings", "أجنحة دجاج (كيلو)", 14000, { description: grillKiloSides }),
-  createItem("grills", "kilo-drumstick", "عصى الطبل (كيلو)", 14000, { description: grillKiloSides }),
-  createItem("grills", "kilo-tawook", "طاووق (كيلو)", 14000, { description: grillKiloSides }),
-
   // المقبلات
   createItem("grills", "appetizers-cup", "كاسة مقبلات", 1500, { notes: "Appetizers" }),
   createItem("grills", "appetizers-4", "مقبلات رباعي", 2500, { notes: "Appetizers" }),
@@ -262,57 +294,107 @@ export const products: readonly MenuItem[] = [
   // 5. الكنافة والحلويات (Kanafa & Sweets)
   // ==========================================
   // الكنافة النابلسية بالجبن
-  createItem("kanafa", "nabulsia-soft-kilo", "الناعمة بالجبن - الكيلو", 16000),
-  createItem("kanafa", "nabulsia-soft-half", "الناعمة بالجبن - نصف كيلو", 8000),
-  createItem("kanafa", "nabulsia-soft-quarter", "الناعمة بالجبن - ربع كيلو", 4000),
+  createItem("kanafa", "nabulsia-soft", "الناعمة بالجبن", 16000, {
+    description: "كنافة نابلسية ناعمة بالجبن.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 16000 },
+      { id: "half", label: "نصف كيلو", price: 8000 },
+      { id: "quarter", label: "ربع كيلو", price: 4000 },
+    ],
+  }),
   // الخشنة بالجبن
-  createItem("kanafa", "nabulsia-rough-cheese-kilo", "الخشنة بالجبن - الكيلو", 16000),
-  createItem("kanafa", "nabulsia-rough-cheese-half", "الخشنة بالجبن - نصف كيلو", 8000),
-  createItem("kanafa", "nabulsia-rough-cheese-quarter", "الخشنة بالجبن - ربع كيلو", 4000),
+  createItem("kanafa", "nabulsia-rough-cheese", "الخشنة بالجبن", 16000, {
+    description: "كنافة نابلسية خشنة بالجبن.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 16000 },
+      { id: "half", label: "نصف كيلو", price: 8000 },
+      { id: "quarter", label: "ربع كيلو", price: 4000 },
+    ],
+  }),
   // الخشنة بالقشطة
-  createItem("kanafa", "nabulsia-rough-cream-kilo", "الخشنة بالقشطة - الكيلو", 16000),
-  createItem("kanafa", "nabulsia-rough-cream-half", "الخشنة بالقشطة - نصف كيلو", 8000),
-  createItem("kanafa", "nabulsia-rough-cream-quarter", "الخشنة بالقشطة - ربع كيلو", 4000),
+  createItem("kanafa", "nabulsia-rough-cream", "الخشنة بالقشطة", 16000, {
+    description: "كنافة نابلسية خشنة بالقشطة.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 16000 },
+      { id: "half", label: "نصف كيلو", price: 8000 },
+      { id: "quarter", label: "ربع كيلو", price: 4000 },
+    ],
+  }),
 
   // كعكة كنافة
   createItem("kanafa", "kanafa-cake-double", "كعكة كنافة - الدبل", 5000),
   createItem("kanafa", "kanafa-cake-regular", "كعكة كنافة - العادي", 3000),
 
   // زنود الست
-  createItem("kanafa", "znoud-kilo", "زنود الست - الكيلو", 12000),
-  createItem("kanafa", "znoud-half", "زنود الست - النصف كيلو", 6000),
-  createItem("kanafa", "znoud-quarter", "زنود الست - الربع كيلو", 3000),
+  createItem("kanafa", "znoud", "زنود الست", 12000, {
+    description: "زنود الست الطازجة.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 12000 },
+      { id: "half", label: "نصف كيلو", price: 6000 },
+      { id: "quarter", label: "ربع كيلو", price: 3000 },
+    ],
+  }),
 
   // القطايف
-  createItem("kanafa", "qatayef-kilo", "القطايف - الكيلو", 12000),
-  createItem("kanafa", "qatayef-half", "القطايف - النصف كيلو", 6000),
-  createItem("kanafa", "qatayef-quarter", "القطايف - الربع كيلو", 3000),
+  createItem("kanafa", "qatayef", "القطايف", 12000, {
+    description: "قطايف شرقية طازجة.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 12000 },
+      { id: "half", label: "نصف كيلو", price: 6000 },
+      { id: "quarter", label: "ربع كيلو", price: 3000 },
+    ],
+  }),
 
   // مشبك حلبي
-  createItem("kanafa", "mshabak-kilo", "مشبك حلبي - الكيلو", 6000),
-  createItem("kanafa", "mshabak-half", "مشبك حلبي - النصف كيلو", 3000),
-  createItem("kanafa", "mshabak-quarter", "مشبك حلبي - الربع كيلو", 1500),
+  createItem("kanafa", "mshabak", "مشبك حلبي", 6000, {
+    description: "مشبك حلبي مقرمش.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 6000 },
+      { id: "half", label: "نصف كيلو", price: 3000 },
+      { id: "quarter", label: "ربع كيلو", price: 1500 },
+    ],
+  }),
 
   // الفيصلية
-  createItem("kanafa", "faisaliah-kilo", "الفيصلية - الكيلو", 16000),
-  createItem("kanafa", "faisaliah-half", "الفيصلية - النصف كيلو", 8000),
-  createItem("kanafa", "faisaliah-quarter", "الفيصلية - الربع كيلو", 4000),
+  createItem("kanafa", "faisaliah", "الفيصلية", 16000, {
+    description: "كنافة الفيصلية الغنية.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 16000 },
+      { id: "half", label: "نصف كيلو", price: 8000 },
+      { id: "quarter", label: "ربع كيلو", price: 4000 },
+    ],
+  }),
   createItem("kanafa", "faisaliah-piece", "الفيصلية - قطعة واحدة", 2000, { badge: "Single Piece" }),
 
   // الشعيبات
-  createItem("kanafa", "shuaibat-kilo", "الشعيبات - الكيلو", 12000),
-  createItem("kanafa", "shuaibat-half", "الشعيبات - النصف كيلو", 6000),
-  createItem("kanafa", "shuaibat-quarter", "الشعيبات - الربع كيلو", 3000),
+  createItem("kanafa", "shuaibat", "الشعيبات", 12000, {
+    description: "شعيبات كنافة لذيذة.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 12000 },
+      { id: "half", label: "نصف كيلو", price: 6000 },
+      { id: "quarter", label: "ربع كيلو", price: 3000 },
+    ],
+  }),
 
   // عصافير
-  createItem("kanafa", "asafir-kilo", "عصافير - الكيلو", 12000),
-  createItem("kanafa", "asafir-half", "عصافير - النصف كيلو", 6000),
-  createItem("kanafa", "asafir-quarter", "عصافير - الربع كيلو", 3000),
+  createItem("kanafa", "asafir", "عصافير", 12000, {
+    description: "عصافير كنافة خفيفة.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 12000 },
+      { id: "half", label: "نصف كيلو", price: 6000 },
+      { id: "quarter", label: "ربع كيلو", price: 3000 },
+    ],
+  }),
 
   // حلاوة الجبن
-  createItem("kanafa", "halawat-jebn-kilo", "حلاوة الجبن - الكيلو", 16000),
-  createItem("kanafa", "halawat-jebn-half", "حلاوة الجبن - النصف كيلو", 8000),
-  createItem("kanafa", "halawat-jebn-quarter", "حلاوة الجبن - الربع كيلو", 4000),
+  createItem("kanafa", "halawat-jebn", "حلاوة الجبن", 16000, {
+    description: "حلاوة الجبن الشرقية.",
+    options: [
+      { id: "kilo", label: "الكيلو", price: 16000 },
+      { id: "half", label: "نصف كيلو", price: 8000 },
+      { id: "quarter", label: "ربع كيلو", price: 4000 },
+    ],
+  }),
 ];
 
 /**

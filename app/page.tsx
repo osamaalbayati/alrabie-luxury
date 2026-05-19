@@ -112,35 +112,44 @@ export default function HomePage() {
     });
   }, []);
 
-  const addToCart = (product: MenuItem) => {
+  const addToCart = (product: MenuItem, optionId?: string) => {
     setCart((current) => {
-      const existing = current.find((item) => item.product.id === product.id);
+      const selectedOption = product.options?.find(
+        (option) => option.id === optionId
+      );
+      const lineId = `${product.id}|${selectedOption?.id ?? "default"}`;
+
+      const existing = current.find((item) => item.id === lineId);
       if (existing) {
         return current.map((item) =>
-          item.product.id === product.id
+          item.id === lineId
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       }
-      return [...current, { product, quantity: 1 }];
+
+      return [
+        ...current,
+        { id: lineId, product, selectedOption, quantity: 1 },
+      ];
     });
   };
 
-  const incrementItem = (productId: string) => {
+  const incrementItem = (lineId: string) => {
     setCart((current) =>
       current.map((item) =>
-        item.product.id === productId
+        item.id === lineId
           ? { ...item, quantity: item.quantity + 1 }
           : item
       )
     );
   };
 
-  const decrementItem = (productId: string) => {
+  const decrementItem = (lineId: string) => {
     setCart((current) =>
       current
         .map((item) =>
-          item.product.id === productId
+          item.id === lineId
             ? { ...item, quantity: Math.max(0, item.quantity - 1) }
             : item
         )
@@ -148,10 +157,8 @@ export default function HomePage() {
     );
   };
 
-  const removeItem = (productId: string) => {
-    setCart((current) =>
-      current.filter((item) => item.product.id !== productId)
-    );
+  const removeItem = (lineId: string) => {
+    setCart((current) => current.filter((item) => item.id !== lineId));
   };
 
   useEffect(() => {
