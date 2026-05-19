@@ -1,334 +1,348 @@
-﻿export type CategoryId = "breakfast" | "manakish" | "pizza" | "grills" | "kanafa";
+﻿/**
+ * @file Menu configuration and data for Al-Rabee Restaurant.
+ * Updated with comprehensive items from the latest menu images.
+ */
 
-export type MenuCategory = {
-  id: CategoryId;
-  title: string;
-  subtitle: string;
-  description: string;
-  image: string;
-};
+export type CategoryId =
+  | "breakfast"
+  | "manakish"
+  | "pizza"
+  | "grills"
+  | "kanafa";
 
-export type MenuItem = {
-  id: string;
-  categoryId: CategoryId;
-  name: string;
-  description: string;
-  price: number;
-  notes?: string;
-  badge?: string;
-};
+export interface MenuCategory {
+  readonly id: CategoryId;
+  readonly title: string;
+  readonly subtitle: string;
+  readonly description: string;
+  readonly image: string;
+}
 
-export type MenuGroup = {
-  category: MenuCategory;
-  items: MenuItem[];
-};
+export interface MenuItem {
+  readonly id: string;
+  readonly categoryId: CategoryId;
+  readonly name: string;
+  readonly description: string;
+  readonly price: number;
+  readonly notes?: string;
+  readonly badge?: string;
+}
+
+export interface MenuGroup {
+  readonly category: MenuCategory;
+  readonly items: readonly MenuItem[];
+}
 
 export const restaurantInfo = {
   name: "مطعم الربيع",
-  tagline: "فطور • مناقيش • بيتزا • مشاوي • كنافة",
+  tagline: "Breakfast • Manakish • Pizza • Grills • Kanafa",
   whatsappBaseUrl: "https://wa.me/",
-  whatsappPhone: "9647804000463"
+  whatsappPhone: "9647804000463",
 } as const;
 
-const asset = (fileName: string) => `/images/al-rabee/${fileName}`;
+const asset = (fileName: string): string => `/images/al-rabee/${fileName}`;
 
-export const categories: MenuCategory[] = [
+export const categories: readonly MenuCategory[] = [
   {
     id: "breakfast",
     title: "الفطور",
     subtitle: "Breakfast",
-    description:
-      "فطور الربيع الصباحي: سيتات كاملة، بيض، سندويشات، أجبان، وقيمر بطابع عربي غني.",
-    image: asset("breakfast.jpg")
+    description: "فطور صباحي متكامل مع البيض والأجبان والقيمر والسندويشات والتوست.",
+    image: asset("breakfast.jpg"),
   },
   {
     id: "manakish",
     title: "المناقيش",
     subtitle: "Manakish",
-    description:
-      "مناقيش مخبوزة على الحار من فرن الربيع، من الزعتر والجبن إلى الشاورما والكفتة.",
-    image: asset("manqish.jpg")
+    description: "مناقيش طازجة بالجبن، الزعتر، اللحم، الشاورما، والخضار نكهات مميزة.",
+    image: asset("manqish.jpg"),
   },
   {
     id: "pizza",
-    title: "البيتزا",
-    subtitle: "Pizza",
-    description:
-      "بيتزا وصاج إيطالي بعجين خفيف وجبن غني، مع خيارات خضار، مارغريتا، شاورما، وسجق.",
-    image: asset("pizza.jpg")
+    title: "البيتزا والصاج",
+    subtitle: "Pizza & Saj",
+    description: "بيتزا إيطالية بعجين خفيف وجبن غني بنكهات متعددة بالإضافة إلى الصاج الإيطالي.",
+    image: asset("pizza.jpg"),
   },
   {
     id: "grills",
-    title: "المشاوي",
-    subtitle: "Grills",
-    description:
-      "مشاوي الربيع على الفحم: أسياش، عروض، كيلوات، مقبلات، وكبة مشوية.",
-    image: asset("mashwai2.jpg")
+    title: "المشاوي والمقبلات",
+    subtitle: "Grills & Appetizers",
+    description: "مشاوي على الفحم بالأسياش والكيلوات، كبة مشوية، مقبلات طازجة ومشروبات.",
+    image: asset("mashwai2.jpg"),
   },
   {
     id: "kanafa",
-    title: "الكنافة",
-    subtitle: "Kanafa",
-    description:
-      "كنافة وحلويات كنافة حمد: نابلسية، زنود الست، قطايف، مشبك، فيصلية، وشعيبيات.",
-    image: asset("kanafa.jpg")
-  }
+    title: "الكنافة والحلويات",
+    subtitle: "Kanafa & Sweets",
+    description: "حلويات شرقية، كنافة نابلسية، زنود الست، قطايف وحلاوة الجبن طازجة يومياً.",
+    image: asset("kanafa.jpg"),
+  },
 ];
 
-const descriptions: Record<CategoryId, string> = {
-  breakfast: "طبق فطور من منيو الربيع يقدم طازجاً مع نكهة صباحية عربية.",
-  manakish: "منقوشة ساخنة من فرن الربيع بعجين طري وحواف ذهبية.",
-  pizza: "بيتزا من منيو الربيع بعجين خفيف وجبن ذائب وتتبيلة غنية.",
-  grills: "صنف مشاوي من الربيع يقدم مع النكهات الجانبية الطازجة.",
-  kanafa: "حلوى شرقية من كنافة حمد محضرة طازجة وبنكهة غنية."
+const defaultDescriptions: Readonly<Record<CategoryId, string>> = {
+  breakfast: "طبق فطور عربي طازج ولذيذ.",
+  manakish: "منقوشة ساخنة مخبوزة فوراً بعجين طري.",
+  pizza: "محضرة بأجود المكونات والجبن الذائب وطعم خيالي.",
+  grills: "مشاوي طازجة متبلة ومشووية على الفحم.",
+  kanafa: "حلويات شرقية عريقة محضرة يومياً بأعلى جودة.",
 };
 
-const item = (
+interface ItemOptions {
+  description?: string;
+  notes?: string;
+  badge?: string;
+}
+
+const createItem = (
   categoryId: CategoryId,
   id: string,
   name: string,
   price: number,
-  options?: Partial<Pick<MenuItem, "description" | "notes" | "badge">>
+  options?: ItemOptions
 ): MenuItem => ({
   id: `${categoryId}-${id}`,
   categoryId,
   name,
   price,
-  description: options?.description ?? descriptions[categoryId],
+  description: options?.description ?? defaultDescriptions[categoryId],
   notes: options?.notes,
-  badge: options?.badge
+  badge: options?.badge,
 });
 
-const grillSides =
-  "طماطم مشوية، بصل مشوي، صلصة ثومية، لهانة حمراء، ريحان، عيش لبناني.";
+const grillSides = "طماطم مشوية، بصل مشوي، صلصة الضبعة الخاصة، ثومية، بلواز، لهانة حمراء، ريحان، عيش لبناني.";
+const grillKiloSides = "طماطم مشوية، بصل مشوي، صلصة، ثومية، بلواز، لهانة حمراء، ريحان، عيش لبناني.";
 
-export const products: MenuItem[] = [
-  item("breakfast", "set-2", "سيت منيو لشخصين", 10000, {
-    badge: "فطور كامل",
-    description:
-      "منقوشة لحم، فطار، أجبان منوعة، قطعة كرواسون، زيتون، مخلل، سلطة، وصمون."
+export const products: readonly MenuItem[] = [
+  // ==========================================
+  // 1. الفطور (Breakfast)
+  // ==========================================
+  // فطور كامل
+  createItem("breakfast", "set-2", "سيت منيو لشخصين", 10000, {
+    badge: "Popular",
+    description: "منقوشة لحم، فطائر، أجبان منوعة، قطعة كرواسون، زيتون، مخلل، سلطة، صمون.",
   }),
-  item("breakfast", "set-4", "سيت منيو لـ 4 أشخاص", 20000, {
-    badge: "للمشاركة",
-    description:
-      "منقوشة لحم، منقوشة جبن، منقوشة زعتر، فطار بيض، مرتديلا، أجبان منوعة، قيمر، كرواسون، زيتون، مخلل، سلطة، وصمون."
+  createItem("breakfast", "set-4", "سيت منيو لـ 4 أشخاص", 20000, {
+    badge: "Family",
+    description: "منقوشة لحم، منقوشة جبن، منقوشة زعتر، فطائر بيض، مرتديلا، أجبان منوعة، قيمر، قطعة كرواسون، زيتون، مخلل، سلطة، صمون.",
   }),
-  item("breakfast", "set-6", "سيت منيو لـ 6 أشخاص", 30000, {
-    badge: "عائلي",
-    description:
-      "منقوشة لحم، منقوشة جبن، منقوشة زعتر، فطار، أجبان منوعة، اكسترا قيمر، اكسترا كرواسون، سلطة اكسترا، كيك تركي، بيض عيون، حلويات منوعة، زيتون، مخلل، وصمون."
+  createItem("breakfast", "set-6", "سيت منيو لـ 6 أشخاص", 30000, {
+    badge: "Super Family",
+    description: "منقوشة لحم، منقوشة جبن، منقوشة زعتر، فطائر، أجبان منوعة، أكسترا قيمر، أكسترا كرواسون، سلطة، أكسترا كيك تركي، بيض عيون، 2 حلويات منوعة، زيتون، مخلل، صمون.",
   }),
-  item("breakfast", "fried-eggs", "بيض عيون", 2000, { notes: "البيض" }),
-  item("breakfast", "mixed-eggs", "بيض مكس", 2000, { notes: "البيض" }),
-  item("breakfast", "tomato-larja", "طماطة لرجة", 2000, { notes: "البيض" }),
-  item("breakfast", "eggs-tomato", "بيض وطماطة", 2500, { notes: "البيض" }),
-  item("breakfast", "eggs-zaatar", "بيض بالزعتر", 2500, { notes: "البيض" }),
-  item("breakfast", "eggs-cheese", "بيض بالجبن", 2500, { notes: "البيض" }),
-  item("breakfast", "boiled-eggs", "بيض سلق", 2500, { notes: "4 حبات" }),
-  item("breakfast", "eggs-mortadella", "بيض مارتديلا", 2500, { notes: "البيض" }),
-  item("breakfast", "eggs-sujuk", "بيض عيون سجق", 3000, { notes: "البيض" }),
-  item("breakfast", "mixed-eggs-sujuk", "بيض مكس سجق", 3000, { notes: "البيض" }),
-  item("breakfast", "eggs-pepperoni", "بيض بيروني", 3000, { notes: "البيض" }),
-  item("breakfast", "makhlama", "مخلمة باللحم", 3000, { notes: "البيض" }),
-  item("breakfast", "iranian-omelet", "أومليت إيراني", 3000, { notes: "البيض" }),
-  item("breakfast", "toast-sandwich", "سندويش توست", 3000, { notes: "البيض" }),
-  item("breakfast", "sweet-toast", "توست حلو", 3000, { notes: "البيض" }),
-  item("breakfast", "double-makhlama", "مخلمة لحم دبل", 4000, { notes: "البيض" }),
-  item("breakfast", "egg-croissant", "كرواسون بيض", 5000, { notes: "البيض" }),
-  item("breakfast", "qeymar-sandwich", "ساندويش قيمر", 1000, { notes: "ساندويشات" }),
-  item("breakfast", "kashkaval-sandwich", "ساندويش جبن قشقوان", 1000, { notes: "ساندويشات" }),
-  item("breakfast", "turkish-cheese-sandwich", "ساندويش جبن تركي", 1000, { notes: "ساندويشات" }),
-  item("breakfast", "spiced-cheese-sandwich", "ساندويش جبن متبل", 1000, { notes: "ساندويشات" }),
-  item("breakfast", "mortadella-sandwich", "ساندويش مارتديلا", 1000, { notes: "ساندويشات" }),
-  item("breakfast", "labneh-sandwich", "ساندويش لبنة", 1000, { notes: "ساندويشات" }),
-  item("breakfast", "baghdad-cheese-sandwich", "ساندويش جبن بغداد", 1000, { notes: "ساندويشات" }),
-  item("breakfast", "qeymar-plate", "وجبة قيمر 200 غرام", 5000, { notes: "أجبان" }),
-  item("breakfast", "cheese-plate", "وجبة أجبان منوعة", 5000, { notes: "أجبان" }),
 
-  item("manakish", "zaatar", "منقوشة زعتر", 1500, { badge: "كلاسيك" }),
-  item("manakish", "vegetables", "منقوشة خضار", 2000),
-  item("manakish", "meat", "منقوشة لحم", 2500),
-  item("manakish", "cheese", "منقوشة جبن", 2500),
-  item("manakish", "muhammara", "منقوشة محمرة", 2500),
-  item("manakish", "mix-cheese-zaatar", "منقوشة مكس جبن وزعتر", 2500),
-  item("manakish", "cheese-on-zaatar", "منقوشة جبن على وجه زعتر", 3000),
-  item("manakish", "cheddar", "منقوشة جبن شيدر", 3000),
-  item("manakish", "cheese-vegetables", "منقوشة جبن بالخضار", 3000),
-  item("manakish", "kashkaval", "منقوشة جبن قشقوان", 3000),
-  item("manakish", "cheese-olive", "منقوشة جبن وزيتون", 3000),
-  item("manakish", "labneh-zaatar", "منقوشة لبن وزعتر", 3000),
-  item("manakish", "mafita-cheese", "منقوشة مافيتا بالجبن", 3500),
-  item("manakish", "meat-cheese", "منقوشة لحم وجبن", 3500),
-  item("manakish", "cheese-sujuk", "منقوشة جبن وسجق", 3500),
-  item("manakish", "cheese-mortadella", "منقوشة جبن ومارتديلا", 3500),
-  item("manakish", "muhammara-cheese", "منقوشة محمرة بالجبن", 3500),
-  item("manakish", "sujuk-eggs", "منقوشة سجق بالبيض", 3500),
-  item("manakish", "spinach-cheese", "منقوشة سبانخ بالجبن", 3500),
-  item("manakish", "kofta", "منقوشة كفتة", 3500),
-  item("manakish", "meat-eggs", "منقوشة لحم وبيض", 3500),
-  item("manakish", "cheddar-eggs", "منقوشة جبن شيدر بالبيض", 3500),
-  item("manakish", "cheese-loaf", "رغيف جبن", 3500),
-  item("manakish", "akkawi-cheddar", "منقوشة جبن عكاوي وشيدر", 3500),
-  item("manakish", "akkawi-kashkaval", "منقوشة جبن عكاوي وقشقوان", 4000),
-  item("manakish", "pepperoni", "منقوشة بيروني", 4000),
-  item("manakish", "kofta-cheese", "منقوشة كفتة بالجبن", 4500),
-  item("manakish", "beef-shawarma", "منقوشة شاورما لحم", 5000),
-  item("manakish", "chicken-shawarma", "منقوشة شاورما دجاج", 5000),
+  // البيض والمخلمة والتوست
+  createItem("breakfast", "fried-eggs", "بيض عيون", 2000, { notes: "Eggs" }),
+  createItem("breakfast", "mix-eggs", "بيض مكس", 2000, { notes: "Eggs" }),
+  createItem("breakfast", "tomato-lagha", "طماطة لاجعة", 2000, { notes: "Eggs" }),
+  createItem("breakfast", "eggs-tomato", "بيض وطماطة", 2500, { notes: "Eggs" }),
+  createItem("breakfast", "eggs-zaatar", "بيض بالزعتر", 2500, { notes: "Eggs" }),
+  createItem("breakfast", "eggs-cheese", "بيض بالجبن", 2500, { notes: "Eggs" }),
+  createItem("breakfast", "boiled-eggs", "بيض سلق (4 قطع)", 2500, { notes: "Eggs" }),
+  createItem("breakfast", "eggs-mortadella", "بيض مارتديلا", 2500, { notes: "Eggs" }),
+  createItem("breakfast", "eggs-sujuk-fried", "بيض عيون سجق", 3000, { notes: "Eggs" }),
+  createItem("breakfast", "eggs-sujuk-mix", "بيض مكس سجق", 3000, { notes: "Eggs" }),
+  createItem("breakfast", "eggs-pepperoni", "بيض ببروني", 3000, { notes: "Eggs" }),
+  createItem("breakfast", "makhlama", "مخلمة باللحم", 3000, { notes: "Eggs" }),
+  createItem("breakfast", "iranian-omelette", "أومليت إيراني", 3000, { notes: "Eggs" }),
+  createItem("breakfast", "toast-sandwich", "سندويش توست", 3000, { notes: "Sandwich" }),
+  createItem("breakfast", "sweet-toast", "توست حلو", 3000, { notes: "Sandwich" }),
+  createItem("breakfast", "makhlama-double", "مخلمة لحم دبل", 4000, { notes: "Eggs" }),
+  createItem("breakfast", "croissant-eggs", "كرواسون بيض", 5000, { notes: "Sandwich" }),
 
-  item("pizza", "vegetables-medium", "بيتزا خضار وسط", 6000),
-  item("pizza", "vegetables-large", "بيتزا خضار كبير", 9000),
-  item("pizza", "margherita-medium", "بيتزا مارغريتا وسط", 5000),
-  item("pizza", "margherita-large", "بيتزا مارغريتا كبير", 7000),
-  item("pizza", "beef-shawarma-medium", "بيتزا شاورما لحم وسط", 9000),
-  item("pizza", "beef-shawarma-large", "بيتزا شاورما لحم كبير", 11000),
-  item("pizza", "chicken-shawarma-medium", "بيتزا شاورما دجاج وسط", 9000),
-  item("pizza", "chicken-shawarma-large", "بيتزا شاورما دجاج كبير", 11000),
-  item("pizza", "sujuk-medium", "بيتزا سجق وسط", 7000),
-  item("pizza", "sujuk-large", "بيتزا سجق كبير", 9000),
-  item("pizza", "pepperoni-medium", "بيتزا بيروني وسط", 7000),
-  item("pizza", "pepperoni-large", "بيتزا بيروني كبير", 9000),
-  item("pizza", "mortadella-medium", "بيتزا مارتديلا وسط", 7000),
-  item("pizza", "mortadella-large", "بيتزا مارتديلا كبير", 9000),
-  item("pizza", "italian-beef-saj", "صاج لحم إيطالي", 5000, { notes: "الصاج الإيطالي" }),
-  item("pizza", "italian-chicken-saj", "صاج دجاج إيطالي", 5000, { notes: "الصاج الإيطالي" }),
+  // السندويشات (كلها بـ 1000)
+  createItem("breakfast", "sandwich-qaymar", "سندويش قيمر", 1000, { notes: "Sandwich" }),
+  createItem("breakfast", "sandwich-kashkaval", "سندويش جبن قشقوان", 1000, { notes: "Sandwich" }),
+  createItem("breakfast", "sandwich-turkey", "سندويش جبن تركي", 1000, { notes: "Sandwich" }),
+  createItem("breakfast", "sandwich-mutabbal", "سندويش جبن متبل", 1000, { notes: "Sandwich" }),
+  createItem("breakfast", "sandwich-mortadella", "سندويش مارتديلا", 1000, { notes: "Sandwich" }),
+  createItem("breakfast", "sandwich-labneh", "سندويش لبنة", 1000, { notes: "Sandwich" }),
+  createItem("breakfast", "sandwich-baghdad", "سندويش جبن بغداد", 1000, { notes: "Sandwich" }),
 
-  item("grills", "chicken-tikka-skewer", "شيش تكة دجاج", 3000, {
-    notes: "المشاوي أسياش",
-    description: grillSides
-  }),
-  item("grills", "chicken-kebab-skewer", "شيش كباب دجاج", 3000, {
-    notes: "المشاوي أسياش",
-    description: grillSides
-  }),
-  item("grills", "beef-kebab-skewer", "شيش كباب لحم", 3000, {
-    notes: "المشاوي أسياش",
-    description: grillSides
-  }),
-  item("grills", "tawook-skewer", "شيش طاووق", 3000, {
-    notes: "المشاوي أسياش",
-    description: grillSides
-  }),
-  item("grills", "wings-skewer", "شيش أجنحة", 3000, {
-    notes: "المشاوي أسياش",
-    description: grillSides
-  }),
-  item("grills", "drumstick-skewer", "شيش عصى الطبل", 3000, {
-    notes: "المشاوي أسياش",
-    description: grillSides
-  }),
-  item("grills", "mixed-5-skewers", "5 أسياش مشاوي مشكلة", 15000, {
-    badge: "عرض",
-    notes: "عروض المشاوي",
-    description:
-      "5 أسياش من اختيارك مع طماطم مشوية، بصل مشوي، صلصة الطبخة الخاصة، ثومية، لهانة حمراء، ريحان، وعيش لبناني."
-  }),
-  item("grills", "grilled-chicken-offer", "عرض الدجاج المشوي", 12000, {
-    badge: "عرض",
-    notes: "عروض المشاوي",
-    description:
-      "دجاجة كاملة مشوية على الفحم بتتبيلة لبنانية مع طماطم مشوية، بصل مشوي، صلصة الطبخة الخاصة، ثومية، لهانة حمراء، ريحان، وعيش لبناني."
-  }),
-  item("grills", "kilo-beef-kebab", "كيلو كباب لحم", 20000, {
-    notes: "كيلوات مشاوي",
-    description: grillSides
-  }),
-  item("grills", "kilo-chicken-kebab", "كيلو كباب دجاج", 18000, {
-    notes: "كيلوات مشاوي",
-    description: grillSides
-  }),
-  item("grills", "kilo-wings", "أجنحة دجاج", 14000, {
-    notes: "كيلوات مشاوي",
-    description: grillSides
-  }),
-  item("grills", "kilo-drumsticks", "عصى الطبل", 14000, {
-    notes: "كيلوات مشاوي",
-    description: grillSides
-  }),
-  item("grills", "kilo-tawook", "طاووق", 14000, {
-    notes: "كيلوات مشاوي",
-    description: grillSides
-  }),
-  item("grills", "grilled-kubba", "كبة مشوية", 2000, { notes: "الكبة المشوية" }),
-  item("grills", "appetizer-cup", "كاسة مقبلات", 1500, { notes: "المقبلات" }),
-  item("grills", "appetizers-4", "مقبلات رباعي", 2500, { notes: "المقبلات" }),
-  item("grills", "appetizers-5", "مقبلات خماسي", 3500, { notes: "المقبلات" }),
-  item("grills", "appetizers-7", "مقبلات سباعي", 4500, { notes: "المقبلات" }),
-  item("grills", "soft-drink", "المشروبات الغازية", 500, { notes: "مشروبات غازية" }),
+  // أجبان وقيمر بالوجبة
+  createItem("breakfast", "plate-qaymar", "وجبة قيمر 200 غرام", 5000, { notes: "Platter" }),
+  createItem("breakfast", "plate-cheese", "وجبة أجبان منوعة", 5000, { notes: "Platter" }),
 
-  item("kanafa", "soft-cheese-kilo", "الكنافة الناعمة بالجبن - كيلو", 16000, {
-    badge: "نابلسية"
+
+  // ==========================================
+  // 2. المناقيش (Manakish)
+  // ==========================================
+  createItem("manakish", "zaatar", "منقوشة زعتر", 1500, { badge: "Classic" }),
+  createItem("manakish", "vegetables", "منقوشة خضار", 2000),
+  createItem("manakish", "meat", "منقوشة لحم", 2500),
+  createItem("manakish", "cheese", "منقوشة جبن", 2500),
+  createItem("manakish", "muhammara", "منقوشة محمرة", 2500),
+  createItem("manakish", "mix-cheese-zaatar", "منقوشة مكس جبن وزعتر", 2500),
+  createItem("manakish", "cheese-zaatar-top", "منقوشة جبن على وجه زعتر", 3000),
+  createItem("manakish", "cheese-cheddar", "منقوشة جبن شيدر", 3000),
+  createItem("manakish", "cheese-vegetables", "منقوشة جبن بالخضار", 3000),
+  createItem("manakish", "cheese-kashkaval", "منقوشة جبن قشقوان", 3000),
+  createItem("manakish", "cheese-olives", "منقوشة جبن وزيتون", 3000),
+  createItem("manakish", "labneh-zaatar", "منقوشة لبن وزعتر", 3000),
+  createItem("manakish", "spinach-cheese", "منقوشة سبانخ بالجبن", 3500),
+  createItem("manakish", "kofta", "منقوشة كفتة", 3500),
+  createItem("manakish", "meat-eggs", "منقوشة لحم وبيض", 3500),
+  createItem("manakish", "cheese-cheddar-eggs", "منقوشة جبن شيدر بالبيض", 3500),
+  createItem("manakish", "loaf-cheese", "رغيف جبن", 3500),
+  createItem("manakish", "cheese-akkawi-cheddar", "منقوشة جبن عكاوي وشيدر", 3500),
+  createItem("manakish", "fajita-chicken", "منقوشة فاهيتا بالدجاج", 3500),
+  createItem("manakish", "meat-cheese", "منقوشة لحم وجبن", 3500),
+  createItem("manakish", "cheese-sujuk", "منقوشة جبن وسجق", 3500),
+  createItem("manakish", "cheese-mortadella", "منقوشة جبن ومارتديلا", 3500),
+  createItem("manakish", "muhammara-cheese", "منقوشة محمرة بالجبن", 3500),
+  createItem("manakish", "sujuk-eggs", "منقوشة سجق بالبيض", 3500),
+  createItem("manakish", "cheese-akkawi-kashkaval", "منقوشة جبن عكاوي وقشقوان", 4000),
+  createItem("manakish", "pepperoni", "منقوشة ببروني", 4000),
+  createItem("manakish", "kofta-cheese", "منقوشة كفتة بالجبن", 4500),
+  createItem("manakish", "shawarma-meat", "منقوشة شاورما لحم", 5000, { badge: "Special" }),
+  createItem("manakish", "shawarma-chicken", "منقوشة شاورما دجاج", 5000, { badge: "Special" }),
+
+
+  // ==========================================
+  // 3. البيتزا والصاج (Pizza & Saj)
+  // ==========================================
+  createItem("pizza", "veggie-medium", "بيتزا خضار وسط", 6000),
+  createItem("pizza", "veggie-large", "بيتزا خضار كبير", 9000),
+  createItem("pizza", "margherita-medium", "بيتزا مارغريتا وسط", 5000),
+  createItem("pizza", "margherita-large", "بيتزا مارغريتا كبير", 7000),
+  createItem("pizza", "shawarma-meat-medium", "بيتزا شاورما لحم وسط", 9000),
+  createItem("pizza", "shawarma-meat-large", "بيتزا شاورما لحم كبير", 11000),
+  createItem("pizza", "shawarma-chicken-medium", "بيتزا شاورما دجاج وسط", 9000),
+  createItem("pizza", "shawarma-chicken-large", "بيتزا شاورما دجاج كبير", 11000),
+  createItem("pizza", "sujuk-medium", "بيتزا سجق وسط", 7000),
+  createItem("pizza", "sujuk-large", "بيتزا سجق كبير", 9000),
+  createItem("pizza", "pepperoni-medium", "بيتزا ببروني وسط", 7000),
+  createItem("pizza", "pepperoni-large", "بيتزا ببروني كبير", 9000),
+  createItem("pizza", "mortadella-medium", "بيتزا مارتديلا وسط", 7000),
+  createItem("pizza", "mortadella-large", "بيتزا مارتديلا كبير", 9000),
+  // الصاج الايطالي
+  createItem("pizza", "saj-meat", "صاج لحم إيطالي", 5000, { notes: "Italian Saj" }),
+  createItem("pizza", "saj-chicken", "صاج دجاج إيطالي", 5000, { notes: "Italian Saj" }),
+
+
+  // ==========================================
+  // 4. المشاوي والمقبلات (Grills & Appetizers)
+  // ==========================================
+  // المشاوي أشياش
+  createItem("grills", "tikka-chicken", "شيش تكة دجاج", 3000, { description: grillSides }),
+  createItem("grills", "kebab-chicken", "شيش كباب دجاج", 3000, { description: grillSides }),
+  createItem("grills", "kebab-meat", "شيش كباب لحم", 3000, { description: grillSides }),
+  createItem("grills", "tawook", "شيش طاووق", 3000, { description: grillSides }),
+  createItem("grills", "wings", "شيش أجنحة", 3000, { description: grillSides }),
+  createItem("grills", "drumstick", "شيش عصى طبل", 3000, { description: grillSides }),
+  
+  // الكبة المشوية والمشروبات
+  createItem("grills", "kibbeh-grilled", "كبة مشوية", 2000, { notes: "Kibbeh" }),
+  createItem("grills", "soda", "المشروبات الغازية", 500, { notes: "Drinks" }),
+
+  // عروض المشاوي
+  createItem("grills", "offer-5-skewers", "5 أسياش مشاوي مشكلة", 15000, {
+    badge: "Best Offer",
+    description: "5 أشياش من اختيارك | طماطم مشوية | بصل مشوي | صلصة الضبعة الخاصة | ثومية | بلواز | لهانة حمراء | ريحان | عيش لبناني.",
   }),
-  item("kanafa", "soft-cheese-half", "الكنافة الناعمة بالجبن - نصف كيلو", 8000, {
-    notes: "الكنافة النابلسية"
+  createItem("grills", "offer-chicken-grilled", "عرض الدجاج المشوي", 12000, {
+    description: "دجاجة كاملة مشوية على الفحم بتتبيلة لبنانية | طماطم مشوية | بصل مشوي | صلصة الضبعة الخاصة | ثومية | بلواز | لهانة حمراء | ريحان | عيش لبناني.",
   }),
-  item("kanafa", "soft-cheese-quarter", "الكنافة الناعمة بالجبن - ربع كيلو", 4000, {
-    notes: "الكنافة النابلسية"
-  }),
-  item("kanafa", "rough-cheese-kilo", "الكنافة الخشنة بالجبن - كيلو", 16000, {
-    notes: "الكنافة النابلسية"
-  }),
-  item("kanafa", "rough-cheese-half", "الكنافة الخشنة بالجبن - نصف كيلو", 8000, {
-    notes: "الكنافة النابلسية"
-  }),
-  item("kanafa", "rough-cheese-quarter", "الكنافة الخشنة بالجبن - ربع كيلو", 4000, {
-    notes: "الكنافة النابلسية"
-  }),
-  item("kanafa", "rough-cream-kilo", "الكنافة الخشنة بالقشطة - كيلو", 16000, {
-    notes: "الكنافة النابلسية"
-  }),
-  item("kanafa", "rough-cream-half", "الكنافة الخشنة بالقشطة - نصف كيلو", 8000, {
-    notes: "الكنافة النابلسية"
-  }),
-  item("kanafa", "rough-cream-quarter", "الكنافة الخشنة بالقشطة - ربع كيلو", 4000, {
-    notes: "الكنافة النابلسية"
-  }),
-  item("kanafa", "kanafa-cake-double", "كعكة كنافة دبل", 5000, { notes: "كعكة كنافة" }),
-  item("kanafa", "kanafa-cake-regular", "كعكة كنافة عادي", 3000, { notes: "كعكة كنافة" }),
-  item("kanafa", "asafeer-kilo", "عصافير - كيلو", 12000, { notes: "عصافير" }),
-  item("kanafa", "asafeer-half", "عصافير - نصف كيلو", 6000, { notes: "عصافير" }),
-  item("kanafa", "asafeer-quarter", "عصافير - ربع كيلو", 3000, { notes: "عصافير" }),
-  item("kanafa", "halawat-cheese-kilo", "حلاوة الجبن - كيلو", 16000, { notes: "حلاوة الجبن" }),
-  item("kanafa", "halawat-cheese-half", "حلاوة الجبن - نصف كيلو", 8000, { notes: "حلاوة الجبن" }),
-  item("kanafa", "halawat-cheese-quarter", "حلاوة الجبن - ربع كيلو", 4000, { notes: "حلاوة الجبن" }),
-  item("kanafa", "znoud-kilo", "زنود الست - كيلو", 12000, { notes: "زنود الست" }),
-  item("kanafa", "znoud-half", "زنود الست - نصف كيلو", 6000, { notes: "زنود الست" }),
-  item("kanafa", "znoud-quarter", "زنود الست - ربع كيلو", 3000, { notes: "زنود الست" }),
-  item("kanafa", "qatayef-kilo", "القطايف - كيلو", 12000, { notes: "القطايف" }),
-  item("kanafa", "qatayef-half", "القطايف - نصف كيلو", 6000, { notes: "القطايف" }),
-  item("kanafa", "qatayef-quarter", "القطايف - ربع كيلو", 3000, { notes: "القطايف" }),
-  item("kanafa", "mshabak-kilo", "مشبك حلبي - كيلو", 6000, { notes: "مشبك حلبي" }),
-  item("kanafa", "mshabak-half", "مشبك حلبي - نصف كيلو", 3000, { notes: "مشبك حلبي" }),
-  item("kanafa", "mshabak-quarter", "مشبك حلبي - ربع كيلو", 1500, { notes: "مشبك حلبي" }),
-  item("kanafa", "faisaliah-kilo", "الفيصلية - كيلو", 16000, { notes: "الفيصلية" }),
-  item("kanafa", "faisaliah-half", "الفيصلية - نصف كيلو", 8000, { notes: "الفيصلية" }),
-  item("kanafa", "faisaliah-quarter", "الفيصلية - ربع كيلو", 4000, { notes: "الفيصلية" }),
-  item("kanafa", "faisaliah-piece", "الفيصلية - قطعة واحدة", 2000, { notes: "الفيصلية" }),
-  item("kanafa", "shuaibiyat-kilo", "الشعيبيات - كيلو", 12000, { notes: "الشعيبيات" }),
-  item("kanafa", "shuaibiyat-half", "الشعيبيات - نصف كيلو", 6000, { notes: "الشعيبيات" }),
-  item("kanafa", "shuaibiyat-quarter", "الشعيبيات - ربع كيلو", 3000, { notes: "الشعيبيات" })
+
+  // كيلوات مشاوي
+  createItem("grills", "kilo-kebab-meat", "كيلو كباب لحم", 20000, { description: grillKiloSides }),
+  createItem("grills", "kilo-kebab-chicken", "كيلو كباب دجاج", 18000, { description: grillKiloSides }),
+  createItem("grills", "kilo-wings", "أجنحة دجاج (كيلو)", 14000, { description: grillKiloSides }),
+  createItem("grills", "kilo-drumstick", "عصى الطبل (كيلو)", 14000, { description: grillKiloSides }),
+  createItem("grills", "kilo-tawook", "طاووق (كيلو)", 14000, { description: grillKiloSides }),
+
+  // المقبلات
+  createItem("grills", "appetizers-cup", "كاسة مقبلات", 1500, { notes: "Appetizers" }),
+  createItem("grills", "appetizers-4", "مقبلات رباعي", 2500, { notes: "Appetizers" }),
+  createItem("grills", "appetizers-5", "مقبلات خماسي", 3500, { notes: "Appetizers" }),
+  createItem("grills", "appetizers-7", "مقبلات سباعي", 4500, { notes: "Appetizers" }),
+
+
+  // ==========================================
+  // 5. الكنافة والحلويات (Kanafa & Sweets)
+  // ==========================================
+  // الكنافة النابلسية بالجبن
+  createItem("kanafa", "nabulsia-soft-kilo", "الناعمة بالجبن - الكيلو", 16000),
+  createItem("kanafa", "nabulsia-soft-half", "الناعمة بالجبن - نصف كيلو", 8000),
+  createItem("kanafa", "nabulsia-soft-quarter", "الناعمة بالجبن - ربع كيلو", 4000),
+  // الخشنة بالجبن
+  createItem("kanafa", "nabulsia-rough-cheese-kilo", "الخشنة بالجبن - الكيلو", 16000),
+  createItem("kanafa", "nabulsia-rough-cheese-half", "الخشنة بالجبن - نصف كيلو", 8000),
+  createItem("kanafa", "nabulsia-rough-cheese-quarter", "الخشنة بالجبن - ربع كيلو", 4000),
+  // الخشنة بالقشطة
+  createItem("kanafa", "nabulsia-rough-cream-kilo", "الخشنة بالقشطة - الكيلو", 16000),
+  createItem("kanafa", "nabulsia-rough-cream-half", "الخشنة بالقشطة - نصف كيلو", 8000),
+  createItem("kanafa", "nabulsia-rough-cream-quarter", "الخشنة بالقشطة - ربع كيلو", 4000),
+
+  // كعكة كنافة
+  createItem("kanafa", "kanafa-cake-double", "كعكة كنافة - الدبل", 5000),
+  createItem("kanafa", "kanafa-cake-regular", "كعكة كنافة - العادي", 3000),
+
+  // زنود الست
+  createItem("kanafa", "znoud-kilo", "زنود الست - الكيلو", 12000),
+  createItem("kanafa", "znoud-half", "زنود الست - النصف كيلو", 6000),
+  createItem("kanafa", "znoud-quarter", "زنود الست - الربع كيلو", 3000),
+
+  // القطايف
+  createItem("kanafa", "qatayef-kilo", "القطايف - الكيلو", 12000),
+  createItem("kanafa", "qatayef-half", "القطايف - النصف كيلو", 6000),
+  createItem("kanafa", "qatayef-quarter", "القطايف - الربع كيلو", 3000),
+
+  // مشبك حلبي
+  createItem("kanafa", "mshabak-kilo", "مشبك حلبي - الكيلو", 6000),
+  createItem("kanafa", "mshabak-half", "مشبك حلبي - النصف كيلو", 3000),
+  createItem("kanafa", "mshabak-quarter", "مشبك حلبي - الربع كيلو", 1500),
+
+  // الفيصلية
+  createItem("kanafa", "faisaliah-kilo", "الفيصلية - الكيلو", 16000),
+  createItem("kanafa", "faisaliah-half", "الفيصلية - النصف كيلو", 8000),
+  createItem("kanafa", "faisaliah-quarter", "الفيصلية - الربع كيلو", 4000),
+  createItem("kanafa", "faisaliah-piece", "الفيصلية - قطعة واحدة", 2000, { badge: "Single Piece" }),
+
+  // الشعيبات
+  createItem("kanafa", "shuaibat-kilo", "الشعيبات - الكيلو", 12000),
+  createItem("kanafa", "shuaibat-half", "الشعيبات - النصف كيلو", 6000),
+  createItem("kanafa", "shuaibat-quarter", "الشعيبات - الربع كيلو", 3000),
+
+  // عصافير
+  createItem("kanafa", "asafir-kilo", "عصافير - الكيلو", 12000),
+  createItem("kanafa", "asafir-half", "عصافير - النصف كيلو", 6000),
+  createItem("kanafa", "asafir-quarter", "عصافير - الربع كيلو", 3000),
+
+  // حلاوة الجبن
+  createItem("kanafa", "halawat-jebn-kilo", "حلاوة الجبن - الكيلو", 16000),
+  createItem("kanafa", "halawat-jebn-half", "حلاوة الجبن - النصف كيلو", 8000),
+  createItem("kanafa", "halawat-jebn-quarter", "حلاوة الجبن - الربع كيلو", 4000),
 ];
 
-export const menuGroups: MenuGroup[] = categories.map((category) => ({
-  category,
-  items: products.filter((product) => product.categoryId === category.id)
-}));
-
-export function formatIQD(price: number) {
-  return `${new Intl.NumberFormat("ar-IQ").format(price)} د.ع`;
-}
-
-export const MENU_ITEMS_STORAGE_KEY = "alrabee_menu_items_v1";
-export const WHATSAPP_PHONE_STORAGE_KEY = "alrabee_whatsapp_phone_v1";
-
-export function getDefaultProducts() {
-  return products.map((product) => ({ ...product }));
-}
-
-export function buildMenuGroups(items: MenuItem[]) {
+/**
+ * Builds menu groups based on provided items.
+ */
+export function buildMenuGroups(items: readonly MenuItem[]): MenuGroup[] {
   return categories.map((category) => ({
     category,
-    items: items.filter((product) => product.categoryId === category.id)
+    items: items.filter((product) => product.categoryId === category.id),
   }));
 }
 
+// إنشاء المجموعات تلقائياً بكود نظيف ومختصر وعالمي
+export const menuGroups: readonly MenuGroup[] = buildMenuGroups(products);
 
+/**
+ * Formats a number to Iraqi Dinar (IQD) currency string.
+ * Uses 'en-US' locale to ensure standard 0-9 western numerals.
+ */
+export function formatIQD(price: number): string {
+  return `${new Intl.NumberFormat("en-US").format(price)} IQD`;
+}
+
+// ثوابت التخزين (Storage Keys)
+export const MENU_ITEMS_STORAGE_KEY = "alrabee_menu_items_v2";
+export const WHATSAPP_PHONE_STORAGE_KEY = "alrabee_whatsapp_phone_v2";
+
+/**
+ * Returns a fresh, mutable copy of the default products array.
+ */
+export function getDefaultProducts(): MenuItem[] {
+  return products.map((product) => ({ ...product }));
+}

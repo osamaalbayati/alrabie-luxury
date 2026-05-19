@@ -17,7 +17,7 @@ export default function Footer() {
             </div>
           </div>
           <p className="max-w-xl leading-8 text-white/58">
-            منيو عربي فاخر مصمم للطلب السريع: أطباق صباحية، مناقيش ساخنة، مشاوي على الفحم، وكنافة طازجة بلمسة الربيع.
+            منيو : أطباق صباحية، مناقيش ساخنة، مشاوي على الفحم، وكنافة طازجة بلمسة الربيع.
           </p>
         </div>
 
@@ -41,7 +41,7 @@ export default function Footer() {
           <div className="space-y-3 text-sm font-semibold text-white/62">
             <p className="flex items-center gap-3">
               <Clock size={18} className="text-luxury-mint" />
-              يومياً من الصباح حتى آخر طلب
+              يومياً لمدة 24 ساعة
             </p>
             <p className="flex items-center gap-3">
               <MessageCircle size={18} className="text-luxury-mint" />
@@ -49,7 +49,7 @@ export default function Footer() {
             </p>
             <p className="flex items-center gap-3">
               <MapPin size={18} className="text-luxury-mint" />
-              خدمة توصيل داخل المدينة
+              خدمة توصيل داخل النجف
             </p>
           </div>
         </div>
