@@ -59,7 +59,7 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
         {product.options ? (
           <div className="mb-5">
             <p className="mb-3 text-sm font-black uppercase tracking-[0.24em] text-white/50">
-              اختر المقاس
+              اختر
             </p>
             <div className="flex flex-wrap gap-2">
               {product.options.map((option) => {

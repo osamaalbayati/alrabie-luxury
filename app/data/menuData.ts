@@ -89,11 +89,11 @@ export const categories: readonly MenuCategory[] = [
 ];
 
 const defaultDescriptions: Readonly<Record<CategoryId, string>> = {
-  breakfast: "طبق فطور عربي طازج ولذيذ.",
-  manakish: "منقوشة ساخنة مخبوزة فوراً بعجين طري.",
-  pizza: "محضرة بأجود المكونات والجبن الذائب وطعم خيالي.",
-  grills: "مشاوي طازجة متبلة ومشووية على الفحم.",
-  kanafa: "حلويات شرقية عريقة محضرة يومياً بأعلى جودة.",
+  breakfast: "طبق فطور عربي أصيل طازج ولذيذ مع أفضل المكونات والحب في الإعداد.",
+  manakish: "منقوشة ساخنة مخبوزة فوراً بعجين طري مع حشوات فاخرة وأفضل الموارد.",
+  pizza: "محضرة بأجود المكونات والجبن الذائب وطعم خيالي يجعلك تشتاق إليها.",
+  grills: "مشاوي عراقية طازجة متبلة بتتبيلة خاصة ومشوية على الفحم بخبرة.",
+  kanafa: "حلويات شرقية عريقة محضرة يومياً بأعلى جودة وأفضل المكونات الفاخرة.",
 };
 
 interface ItemOptions {
@@ -142,6 +142,11 @@ const grillPoultryOptions: readonly MenuItemOption[] = [
   { id: "quarter", label: "ربع كيلو", price: 4500 },
   { id: "half", label: "نصف كيلو", price: 9000 },
   { id: "kilo", label: "كيلو", price: 18000 },
+];
+
+const pizzaSizeOptions: readonly MenuItemOption[] = [
+  { id: "medium", label: "وسط", price: 0 },
+  { id: "large", label: "كبير", price: 3000 },
 ];
 
 export const products: readonly MenuItem[] = [
@@ -232,20 +237,13 @@ export const products: readonly MenuItem[] = [
   // ==========================================
   // 3. البيتزا والصاج (Pizza & Saj)
   // ==========================================
-  createItem("pizza", "veggie-medium", "بيتزا خضار وسط", 6000),
-  createItem("pizza", "veggie-large", "بيتزا خضار كبير", 9000),
-  createItem("pizza", "margherita-medium", "بيتزا مارغريتا وسط", 5000),
-  createItem("pizza", "margherita-large", "بيتزا مارغريتا كبير", 7000),
-  createItem("pizza", "shawarma-meat-medium", "بيتزا شاورما لحم وسط", 9000),
-  createItem("pizza", "shawarma-meat-large", "بيتزا شاورما لحم كبير", 11000),
-  createItem("pizza", "shawarma-chicken-medium", "بيتزا شاورما دجاج وسط", 9000),
-  createItem("pizza", "shawarma-chicken-large", "بيتزا شاورما دجاج كبير", 11000),
-  createItem("pizza", "sujuk-medium", "بيتزا سجق وسط", 7000),
-  createItem("pizza", "sujuk-large", "بيتزا سجق كبير", 9000),
-  createItem("pizza", "pepperoni-medium", "بيتزا ببروني وسط", 7000),
-  createItem("pizza", "pepperoni-large", "بيتزا ببروني كبير", 9000),
-  createItem("pizza", "mortadella-medium", "بيتزا مارتديلا وسط", 7000),
-  createItem("pizza", "mortadella-large", "بيتزا مارتديلا كبير", 9000),
+  createItem("pizza", "veggie", "بيتزا خضار", 6000, { options: pizzaSizeOptions }),
+  createItem("pizza", "margherita", "بيتزا مارغريتا", 5000, { options: pizzaSizeOptions }),
+  createItem("pizza", "shawarma-meat", "بيتزا شاورما لحم", 9000, { options: pizzaSizeOptions }),
+  createItem("pizza", "shawarma-chicken", "بيتزا شاورما دجاج", 9000, { options: pizzaSizeOptions }),
+  createItem("pizza", "sujuk", "بيتزا سجق", 7000, { options: pizzaSizeOptions }),
+  createItem("pizza", "pepperoni", "بيتزا ببروني", 7000, { options: pizzaSizeOptions }),
+  createItem("pizza", "mortadella", "بيتزا مارتديلا", 7000, { options: pizzaSizeOptions }),
   // الصاج الايطالي
   createItem("pizza", "saj-meat", "صاج لحم إيطالي", 5000, { notes: "Italian Saj" }),
   createItem("pizza", "saj-chicken", "صاج دجاج إيطالي", 5000, { notes: "Italian Saj" }),
@@ -255,27 +253,27 @@ export const products: readonly MenuItem[] = [
   // 4. المشاوي والمقبلات (Grills & Appetizers)
   // ==========================================
   // المشاوي الأساسية
-  createItem("grills", "kebab-chicken", "شيش كباب دجاج", 3000, {
+  createItem("grills", "kebab-chicken", " كباب دجاج", 3000, {
     description: grillSides,
     options: grillChickenOptions,
   }),
-  createItem("grills", "kebab-meat", "شيش كباب لحم", 3000, {
+  createItem("grills", "kebab-meat", " كباب لحم", 3000, {
     description: grillSides,
     options: grillBeefOptions,
   }),
-  createItem("grills", "tikka-chicken", "شيش تكة دجاج", 3000, {
+  createItem("grills", "tikka-chicken", " تكة دجاج", 3000, {
     description: grillSides,
     options: grillPoultryOptions,
   }),
-  createItem("grills", "tawook", "شيش طاووق", 3000, {
+  createItem("grills", "tawook", " طاووق", 3000, {
     description: grillSides,
     options: grillPoultryOptions,
   }),
-  createItem("grills", "wings", "شيش أجنحة", 3000, {
+  createItem("grills", "wings", " أجنحة", 3000, {
     description: grillSides,
     options: grillPoultryOptions,
   }),
-  createItem("grills", "drumstick", "شيش عصى طبل", 3000, {
+  createItem("grills", "drumstick", " عصى طبل", 3000, {
     description: grillSides,
     options: grillPoultryOptions,
   }),

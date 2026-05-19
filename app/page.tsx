@@ -8,6 +8,7 @@ import CategoryTabs from "./components/CategoryTabs";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
+import FeaturesSection from "./components/FeaturesSection";
 import ProductCard from "./components/ProductCard";
 import SupportSection from "./components/SupportSection";
 import {
@@ -197,6 +198,8 @@ export default function HomePage() {
       />
 
       <Hero onExplore={scrollToMenu} onOrder={() => setIsCartOpen(true)} />
+
+      <FeaturesSection />
 
       <section id="menu" className="relative px-4 py-14 sm:px-6 lg:px-8">
         <div className="absolute inset-0 -z-10 bg-radial-green opacity-80" />
