@@ -12,6 +12,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import ProductCard from "./components/ProductCard";
 import SupportSection from "./components/SupportSection";
 import {
+  MENU_IMAGE_SCALE_STORAGE_KEY,
   MENU_ITEMS_STORAGE_KEY,
   WHATSAPP_PHONE_STORAGE_KEY,
   type CategoryId,
@@ -39,9 +40,15 @@ export default function HomePage() {
   const [activeCategory, setActiveCategory] = useState<CategoryId>("breakfast");
   const [searchTerm, setSearchTerm] = useState("");
   const [whatsappPhone, setWhatsappPhone] = useState("9647804000463");
+  const [imageScale, setImageScale] = useState(1);
 
   useEffect(() => {
     try {
+      const savedScale = Number(localStorage.getItem(MENU_IMAGE_SCALE_STORAGE_KEY));
+      if (!Number.isNaN(savedScale) && savedScale > 0) {
+        setImageScale(savedScale);
+      }
+
       const savedItems = localStorage.getItem(MENU_ITEMS_STORAGE_KEY);
       if (savedItems) {
         const parsed = JSON.parse(savedItems) as MenuItem[];
@@ -275,13 +282,14 @@ export default function HomePage() {
                   data-category={group.category.id}
                   className="scroll-mt-36"
                 >
-                  <div className="relative mb-6 min-h-[22rem] overflow-hidden rounded-[2rem] border border-white/10 shadow-soft-lift sm:min-h-[28rem]">
+                  <div className="group relative mb-6 min-h-[22rem] overflow-hidden rounded-[2rem] border border-white/10 bg-black/20 shadow-soft-lift transition duration-500 hover:-translate-y-1 sm:min-h-[28rem]">
                     <Image
                       src={group.category.image}
                       alt={group.category.title}
                       fill
                       sizes="(min-width: 1024px) 1200px, 100vw"
-                      className="object-cover transition duration-700 hover:scale-105"
+                      className="object-cover transition duration-700 will-change-transform group-hover:scale-110 group-hover:brightness-110"
+                      style={{ transform: `scale(${imageScale})` }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent" />
                     <div className="absolute inset-x-0 bottom-0 p-5 sm:p-8">

@@ -435,6 +435,7 @@ export function formatIQD(price: number): string {
 // ثوابت التخزين (Storage Keys)
 export const MENU_ITEMS_STORAGE_KEY = "alrabee_menu_items_v2";
 export const WHATSAPP_PHONE_STORAGE_KEY = "alrabee_whatsapp_phone_v2";
+export const MENU_IMAGE_SCALE_STORAGE_KEY = "alrabee_menu_image_scale_v1";
 
 /**
  * Returns a fresh, mutable copy of the default products array.

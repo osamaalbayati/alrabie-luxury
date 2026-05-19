@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { Lock, LogOut, Save, ShieldCheck } from "lucide-react";
 import {
+  MENU_IMAGE_SCALE_STORAGE_KEY,
   MENU_ITEMS_STORAGE_KEY,
   WHATSAPP_PHONE_STORAGE_KEY,
   type MenuItem,
@@ -35,10 +36,20 @@ export default function AdminPage() {
     return localStorage.getItem(WHATSAPP_PHONE_STORAGE_KEY) ?? "9647800000000";
   });
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const savedScale = localStorage.getItem(MENU_IMAGE_SCALE_STORAGE_KEY);
+    if (savedScale) {
+      setImageScale(savedScale);
+    }
+  }, []);
+
   const [query, setQuery] = useState("");
   const [message, setMessage] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [imageScale, setImageScale] = useState("1");
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [checkingAuth, setCheckingAuth] = useState(true);
 
@@ -47,7 +58,22 @@ export default function AdminPage() {
 
     const storedAuth = sessionStorage.getItem(ADMIN_AUTH_KEY) === "true";
     setIsAuthenticated(storedAuth);
-    setCheckingAuth(false);
+
+    const verifyCookie = async () => {
+      try {
+        const response = await fetch("/api/admin/check");
+        if (response.ok) {
+          sessionStorage.setItem(ADMIN_AUTH_KEY, "true");
+          setIsAuthenticated(true);
+        }
+      } catch {
+        // ignore network failures, fallback to sessionStorage only
+      } finally {
+        setCheckingAuth(false);
+      }
+    };
+
+    verifyCookie();
   }, []);
 
   const signIn = async () => {
@@ -75,8 +101,9 @@ export default function AdminPage() {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     if (typeof window !== "undefined") {
+      await fetch("/api/admin/logout", { method: "POST" });
       sessionStorage.removeItem(ADMIN_AUTH_KEY);
     }
     setIsAuthenticated(false);
@@ -111,6 +138,7 @@ export default function AdminPage() {
 
     localStorage.setItem(MENU_ITEMS_STORAGE_KEY, JSON.stringify(items));
     localStorage.setItem(WHATSAPP_PHONE_STORAGE_KEY, phone.trim());
+    localStorage.setItem(MENU_IMAGE_SCALE_STORAGE_KEY, imageScale.trim() || "1");
     setMessage("تم الحفظ بنجاح");
   };
 
@@ -220,6 +248,19 @@ export default function AdminPage() {
               <h2 className="mt-2 text-2xl font-black text-white">رقم واتساب المنيو</h2>
             </div>
             <div className="flex flex-col gap-3 sm:max-w-md">
+              <label className="grid gap-2 text-sm text-white/65">
+                مقياس عرض الصور
+                <input
+                  type="number"
+                  value={imageScale}
+                  onChange={(e) => setImageScale(e.target.value)}
+                  min="0.7"
+                  max="1.3"
+                  step="0.05"
+                  className="h-14 w-full rounded-3xl border border-white/15 bg-black/30 px-4 text-white outline-none transition focus:border-green-400 focus:bg-black/40"
+                  placeholder="1"
+                />
+              </label>
               <input
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
