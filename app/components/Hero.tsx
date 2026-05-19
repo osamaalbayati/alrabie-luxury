@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { ArrowDown, MessageCircle, ShoppingBag } from "lucide-react";
 import { restaurantInfo } from "../data/menuData";
@@ -9,12 +10,17 @@ type HeroProps = {
   onOrder: () => void;
 };
 
-const heroImage =
-  "/images/al-rabee/main.jpg";
+const heroImage = "/images/al-rabee/main.jpg";
 
 export default function Hero({ onExplore, onOrder }: HeroProps) {
   return (
-    <section id="hero" className="relative flex min-h-svh items-end overflow-hidden px-4 pb-10 pt-28 sm:px-6 lg:px-8">
+    <motion.section
+      id="hero"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.85, ease: "easeOut" }}
+      className="relative flex min-h-[100svh] items-end overflow-hidden px-4 pb-10 pt-28 sm:px-6 lg:px-8"
+    >
       <Image
         src={heroImage}
         alt="مطعم الربيع"
@@ -27,7 +33,12 @@ export default function Hero({ onExplore, onOrder }: HeroProps) {
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_25%,rgba(34,197,94,0.25),transparent_34rem)]" />
 
       <div className="relative z-10 mx-auto flex w-full max-w-7xl flex-col items-start gap-8 pb-4">
-        <div className="animate-fadeUp">
+        <motion.div
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, ease: "easeOut" }}
+          className="space-y-6"
+        >
           <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-luxury-mint/30 bg-white/10 px-4 py-2 text-sm font-bold text-luxury-mint backdrop-blur">
             <span className="h-2 w-2 rounded-full bg-luxury-mint shadow-green-glow" />
             طازج يومياً
@@ -35,15 +46,20 @@ export default function Hero({ onExplore, onOrder }: HeroProps) {
           <h1 className="text-balance text-6xl font-black leading-[0.95] tracking-normal text-white sm:text-8xl lg:text-9xl">
             {restaurantInfo.name.replace("مطعم ", "")}
           </h1>
-          <p className="mt-5 max-w-2xl text-xl font-bold text-white/86 sm:text-3xl">
+          <p className="max-w-2xl text-xl font-bold text-white/86 sm:text-3xl">
             {restaurantInfo.tagline}
           </p>
-          <p className="mt-5 max-w-xl text-base leading-8 text-white/62 sm:text-lg">
+          <p className="max-w-xl text-base leading-8 text-white/62 sm:text-lg">
             منيو الربيع الأصلي: فطور صباحي، مناقيش فرن، بيتزا، مشاوي على الفحم، وكنافة طازجة.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.7 }}
+          className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row"
+        >
           <button
             type="button"
             onClick={onExplore}
@@ -60,9 +76,14 @@ export default function Hero({ onExplore, onOrder }: HeroProps) {
             <ShoppingBag size={20} />
             اطلب الآن
           </button>
-        </div>
+        </motion.div>
 
-        <div className="grid w-full gap-3 sm:grid-cols-3">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.7 }}
+          className="grid w-full gap-3 sm:grid-cols-3"
+        >
           {["خبز ساخن", "مشاوي على الفحم", "طلب واتساب"].map((item, index) => (
             <div
               key={item}
@@ -73,7 +94,7 @@ export default function Hero({ onExplore, onOrder }: HeroProps) {
               {item}
             </div>
           ))}
-        </div>
+        </motion.div>
       </div>
 
       <button
@@ -84,6 +105,6 @@ export default function Hero({ onExplore, onOrder }: HeroProps) {
       >
         <MessageCircle size={22} />
       </button>
-    </section>
+    </motion.section>
   );
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import { Minus, Plus, Send, ShoppingBag, Trash2, X } from "lucide-react";
 import type { MenuItem, MenuItemOption } from "../data/menuData";
@@ -193,12 +194,17 @@ export default function CartDrawer({
           <>
             <div className="hide-scrollbar flex-1 overflow-y-auto px-5 py-5">
               <div className="space-y-3">
+              <AnimatePresence initial={false}>
                 {items.map((item) => {
                   const itemPrice = item.selectedOption?.price ?? item.product.price;
                   return (
-                    <div
+                    <motion.div
                       key={item.id}
-                      className="rounded-3xl border border-white/10 bg-white/[0.055] p-4"
+                      initial={{ opacity: 0, y: 18 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -18 }}
+                      transition={{ duration: 0.2 }}
+                      className="rounded-3xl border border-white/10 bg-white/[0.055] p-4 shadow-[0_16px_50px_rgba(0,0,0,0.28)] transition duration-300 hover:-translate-y-0.5 hover:border-luxury-mint/40"
                     >
                       <div className="flex items-start justify-between gap-3">
                         <div className="min-w-0">
@@ -254,10 +260,11 @@ export default function CartDrawer({
                           {formatIQD(itemPrice * item.quantity)}
                         </p>
                       </div>
-                    </div>
+                    </motion.div>
                   );
                 })}
-              </div>
+              </AnimatePresence>
+            </div>
 
               <div className="mt-6 rounded-[32px] border border-white/10 bg-gradient-to-b from-white/[0.08] to-white/[0.03] p-5 shadow-[0_10px_50px_rgba(0,0,0,0.45)] backdrop-blur-2xl">
                 <div className="mb-5 flex items-center justify-between">

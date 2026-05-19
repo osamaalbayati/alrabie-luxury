@@ -1,5 +1,6 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { useState } from "react";
 import { Plus, Sparkles } from "lucide-react";
 import type { MenuItem } from "../data/menuData";
@@ -22,9 +23,15 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
   const productPrice = selectedOption?.price ?? product.price;
 
   return (
-    <article className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.055] p-4 shadow-soft-lift backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-luxury-mint/50 hover:bg-white/[0.08] sm:p-5">
+    <motion.article
+      initial={{ opacity: 0, y: 24 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.45, ease: "easeOut" }}
+      className="group relative overflow-hidden rounded-3xl border border-white/10 bg-white/[0.05] p-5 shadow-soft-lift backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-luxury-mint/50 hover:bg-white/[0.08]"
+    >
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-l from-transparent via-luxury-mint/70 to-transparent opacity-0 transition group-hover:opacity-100" />
-      <div className="flex min-h-44 flex-col">
+
+      <div className="flex min-h-[18rem] flex-col">
         <div className="mb-4 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
@@ -40,39 +47,55 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
               <p className="mt-1 text-xs font-bold text-luxury-mint/85">{product.notes}</p>
             ) : null}
           </div>
-          <p className="shrink-0 rounded-2xl bg-black/35 px-3 py-2 text-sm font-black text-white green-ring">
-            {formatIQD(productPrice)}
-          </p>
+
+          <div className="shrink-0 rounded-2xl bg-black/35 px-3 py-2 text-right text-sm font-black text-white green-ring">
+            <p className="text-xs text-white/55">السعر</p>
+            <p>{formatIQD(productPrice)}</p>
+          </div>
         </div>
 
         <p className="mb-5 flex-1 text-sm leading-7 text-white/62">{product.description}</p>
 
         {product.options ? (
-          <label className="mb-4 grid gap-2 text-sm font-bold text-white/65">
-            <span>اختر الوزن</span>
-            <select
-              value={selectedOptionId}
-              onChange={(event) => setSelectedOptionId(event.target.value)}
-              className="h-14 w-full rounded-3xl border border-white/10 bg-black/30 px-4 text-white outline-none transition focus:border-green-400 focus:bg-black/40"
-            >
-              {product.options.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.label} — {formatIQD(option.price)}
-                </option>
-              ))}
-            </select>
-          </label>
+          <div className="mb-5">
+            <p className="mb-3 text-sm font-black uppercase tracking-[0.24em] text-white/50">
+              اختر المقاس
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {product.options.map((option) => {
+                const isActive = option.id === selectedOptionId;
+                return (
+                  <motion.button
+                    key={option.id}
+                    type="button"
+                    whileHover={{ y: -2 }}
+                    onClick={() => setSelectedOptionId(option.id)}
+                    className={`rounded-3xl border px-4 py-3 text-left text-sm font-bold transition duration-200 ${
+                      isActive
+                        ? "border-luxury-mint bg-luxury-mint text-luxury-black shadow-green-glow"
+                        : "border-white/10 bg-black/25 text-white/75 hover:border-luxury-mint/70 hover:text-white"
+                    }`}
+                  >
+                    <span>{option.label}</span>
+                    <span className="mt-1 block text-xs font-semibold text-white/45">
+                      {formatIQD(option.price)}
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
+          </div>
         ) : null}
 
         <button
           type="button"
           onClick={() => onAdd(product, selectedOptionId || undefined)}
-          className="inline-flex min-h-12 items-center justify-center gap-2 rounded-2xl bg-white px-4 py-3 text-sm font-black text-luxury-black transition hover:bg-luxury-mint hover:shadow-green-glow active:scale-[0.98]"
+          className="inline-flex min-h-14 w-full items-center justify-center gap-3 rounded-3xl bg-luxury-mint px-5 py-3 text-sm font-black text-luxury-black transition duration-300 hover:scale-[1.01] hover:shadow-green-glow active:scale-[0.98]"
         >
-          <Plus size={18} strokeWidth={2.5} />
+          <Plus size={18} />
           أضف للسلة
         </button>
       </div>
-    </article>
+    </motion.article>
   );
 }

@@ -1,21 +1,15 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  MessageCircle,
-  Search,
-  Settings2,
-  ShoppingBag,
-  X,
-} from "lucide-react";
+import { MessageCircle, Search, ShoppingBag, X } from "lucide-react";
 import CartDrawer, { type CartLine } from "./components/CartDrawer";
 import CategoryTabs from "./components/CategoryTabs";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import ProductCard from "./components/ProductCard";
+import SupportSection from "./components/SupportSection";
 import {
   MENU_ITEMS_STORAGE_KEY,
   WHATSAPP_PHONE_STORAGE_KEY,
@@ -240,14 +234,6 @@ export default function HomePage() {
                   </button>
                 ) : null}
               </label>
-
-              <Link
-                href="/admin"
-                className="inline-flex h-14 items-center justify-center gap-2 rounded-2xl border border-white/15 bg-white/10 px-4 font-bold hover:border-luxury-mint hover:text-luxury-mint"
-              >
-                <Settings2 size={18} />
-                Admin
-              </Link>
             </div>
           </div>
         </div>
@@ -324,6 +310,8 @@ export default function HomePage() {
         </div>
       </section>
 
+      <SupportSection />
+
       <Footer />
 
       <div className="fixed inset-x-4 bottom-4 z-40 flex items-center justify-between gap-3 sm:hidden">
@@ -357,8 +345,8 @@ export default function HomePage() {
         )}`}
         target="_blank"
         rel="noreferrer"
-        className="fixed bottom-6 left-6 z-30 hidden h-14 w-14 place-items-center rounded-2xl bg-luxury-mint text-luxury-black shadow-green-glow transition hover:-translate-y-1 sm:grid"
-        aria-label="واتساب"
+        className="fixed bottom-20 left-4 z-30 grid h-14 w-14 place-items-center rounded-2xl bg-luxury-mint text-luxury-black shadow-green-glow transition hover:-translate-y-1"
+        aria-label="دعم واتساب"
       >
         <MessageCircle size={23} />
       </a>

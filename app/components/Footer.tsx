@@ -5,7 +5,7 @@ import Image from "next/image";
 export default function Footer() {
   return (
     <footer className="border-t border-white/10 bg-black/35 px-4 py-10 sm:px-6 lg:px-8">
-      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.2fr_0.8fr_0.8fr]">
+      <div className="mx-auto grid max-w-7xl gap-8 lg:grid-cols-[1.2fr_0.9fr_0.9fr]">
         <div>
           <div className="mb-4 inline-flex items-center gap-3">
             <span className="grid h-12 w-12 place-items-center rounded-2xl bg-luxury-mint text-luxury-black shadow-green-glow">
@@ -17,7 +17,7 @@ export default function Footer() {
             </div>
           </div>
           <p className="max-w-xl leading-8 text-white/58">
-            منيو : أطباق صباحية، مناقيش ساخنة، مشاوي على الفحم، وكنافة طازجة بلمسة الربيع.
+            تجربة طلب فاخرة من مطعم الربيع. فطور، مناقيش، مشاوي، وكنافة بدعم مباشر عبر واتساب.
           </p>
         </div>
 
@@ -37,19 +37,19 @@ export default function Footer() {
         </div>
 
         <div>
-          <h2 className="mb-4 text-lg font-black text-white">الطلب والتوصيل</h2>
+          <h2 className="mb-4 text-lg font-black text-white">دعم الطلب</h2>
           <div className="space-y-3 text-sm font-semibold text-white/62">
             <p className="flex items-center gap-3">
               <Clock size={18} className="text-luxury-mint" />
-              يومياً لمدة 24 ساعة
+              خدمة 24 ساعة
             </p>
             <p className="flex items-center gap-3">
               <MessageCircle size={18} className="text-luxury-mint" />
-              الطلب يجهز تلقائياً عبر واتساب
+              دعم مباشر عبر واتساب
             </p>
             <p className="flex items-center gap-3">
               <MapPin size={18} className="text-luxury-mint" />
-              خدمة توصيل داخل النجف
+              توصيل داخل النجف
             </p>
           </div>
         </div>

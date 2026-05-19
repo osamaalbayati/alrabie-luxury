@@ -123,6 +123,27 @@ const createItem = (
 const grillSides = "طماطم مشوية، بصل مشوي، صلصة الضبعة الخاصة، ثومية، بلواز، لهانة حمراء، ريحان، عيش لبناني.";
 const grillKiloSides = "طماطم مشوية، بصل مشوي، صلصة، ثومية، بلواز، لهانة حمراء، ريحان، عيش لبناني.";
 
+const grillChickenOptions: readonly MenuItemOption[] = [
+  { id: "skewer", label: "شيش", price: 3000 },
+  { id: "quarter", label: "ربع كيلو", price: 4500 },
+  { id: "half", label: "نصف كيلو", price: 9000 },
+  { id: "kilo", label: "كيلو", price: 18000 },
+];
+
+const grillBeefOptions: readonly MenuItemOption[] = [
+  { id: "skewer", label: "شيش", price: 3000 },
+  { id: "quarter", label: "ربع كيلو", price: 5000 },
+  { id: "half", label: "نصف كيلو", price: 10000 },
+  { id: "kilo", label: "كيلو", price: 20000 },
+];
+
+const grillPoultryOptions: readonly MenuItemOption[] = [
+  { id: "skewer", label: "شيش", price: 3000 },
+  { id: "quarter", label: "ربع كيلو", price: 4500 },
+  { id: "half", label: "نصف كيلو", price: 9000 },
+  { id: "kilo", label: "كيلو", price: 18000 },
+];
+
 export const products: readonly MenuItem[] = [
   // ==========================================
   // 1. الفطور (Breakfast)
@@ -233,54 +254,46 @@ export const products: readonly MenuItem[] = [
   // ==========================================
   // 4. المشاوي والمقبلات (Grills & Appetizers)
   // ==========================================
-  // المشاوي أشياش
-  createItem("grills", "kebab-meat", "شيش كباب لحم", 4500, {
+  // المشاوي الأساسية
+  createItem("grills", "kebab-chicken", "شيش كباب دجاج", 3000, {
     description: grillSides,
-    options: [
-      { id: "250g", label: "250 غرام", price: 4500 },
-      { id: "500g", label: "500 غرام", price: 9000 },
-      { id: "1kg", label: "1 كيلو", price: 18000 },
-    ],
+    options: grillChickenOptions,
   }),
-  createItem("grills", "kebab-chicken", "شيش كباب دجاج", 4500, {
+  createItem("grills", "kebab-meat", "شيش كباب لحم", 3000, {
     description: grillSides,
-    options: [
-      { id: "250g", label: "250 غرام", price: 4500 },
-      { id: "500g", label: "500 غرام", price: 9000 },
-      { id: "1kg", label: "1 كيلو", price: 18000 },
-    ],
+    options: grillBeefOptions,
   }),
-  createItem("grills", "tikka-chicken", "شيش تكة دجاج", 3000, { description: grillSides }),
+  createItem("grills", "tikka-chicken", "شيش تكة دجاج", 3000, {
+    description: grillSides,
+    options: grillPoultryOptions,
+  }),
   createItem("grills", "tawook", "شيش طاووق", 3000, {
     description: grillSides,
-    options: [
-      { id: "kilo", label: "الكيلو", price: 14000 },
-    ],
+    options: grillPoultryOptions,
   }),
   createItem("grills", "wings", "شيش أجنحة", 3000, {
     description: grillSides,
-    options: [
-      { id: "kilo", label: "الكيلو", price: 14000 },
-    ],
+    options: grillPoultryOptions,
   }),
   createItem("grills", "drumstick", "شيش عصى طبل", 3000, {
     description: grillSides,
-    options: [
-      { id: "kilo", label: "الكيلو", price: 14000 },
-    ],
+    options: grillPoultryOptions,
   }),
-  
-  // الكبة المشوية والمشروبات
-  createItem("grills", "kibbeh-grilled", "كبة مشوية", 2000, { notes: "Kibbeh" }),
-  createItem("grills", "soda", "المشروبات الغازية", 500, { notes: "Drinks" }),
 
-  // عروض المشاوي
+  createItem("grills", "kibbeh-grilled", "كبة مشوية", 2000, {
+    description: "كبة مشوية عربية شهية تقدم مع طماطم مشوية وبصل مشوي.",
+    notes: "Kibbeh",
+  }),
+
+  // عروض العائلات
   createItem("grills", "offer-5-skewers", "5 أسياش مشاوي مشكلة", 15000, {
     badge: "Best Offer",
-    description: "5 أشياش من اختيارك | طماطم مشوية | بصل مشوي | صلصة الضبعة الخاصة | ثومية | بلواز | لهانة حمراء | ريحان | عيش لبناني.",
+    description:
+      "5 أشياش من اختيارك | طماطم مشوية | بصل مشوي | صلصة الضبعة الخاصة | ثومية | بلواز | لهانة حمراء | ريحان | عيش لبناني.",
   }),
   createItem("grills", "offer-chicken-grilled", "عرض الدجاج المشوي", 12000, {
-    description: "دجاجة كاملة مشوية على الفحم بتتبيلة لبنانية | طماطم مشوية | بصل مشوي | صلصة الضبعة الخاصة | ثومية | بلواز | لهانة حمراء | ريحان | عيش لبناني.",
+    description:
+      "دجاجة كاملة مشوية بتتبيلة خاصة | طماطم مشوية | بصل مشوي | صلصة الضبعة | ثومية | بلواز | عيش لبناني.",
   }),
 
   // المقبلات
@@ -288,6 +301,9 @@ export const products: readonly MenuItem[] = [
   createItem("grills", "appetizers-4", "مقبلات رباعي", 2500, { notes: "Appetizers" }),
   createItem("grills", "appetizers-5", "مقبلات خماسي", 3500, { notes: "Appetizers" }),
   createItem("grills", "appetizers-7", "مقبلات سباعي", 4500, { notes: "Appetizers" }),
+
+  // المشروبات الغازية
+  createItem("grills", "soda", "المشروبات الغازية", 500, { notes: "Drinks" }),
 
 
   // ==========================================

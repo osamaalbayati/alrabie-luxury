@@ -30,7 +30,15 @@ export const metadata: Metadata = {
     description: "فطور • مناقيش • بيتزا • مشاوي • كنافة",
     locale: "ar_IQ",
     siteName: "مطعم الربيع",
-    type: "website"
+    type: "website",
+    images: [
+      {
+        url: "https://alrabee-restaurant.example.com/images/al-rabee/main.jpg",
+        width: 1200,
+        height: 630,
+        alt: "مطعم الربيع"
+      }
+    ]
   }
 };
 
