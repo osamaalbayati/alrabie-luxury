@@ -19,7 +19,7 @@ export default function Hero({ onExplore, onOrder }: HeroProps) {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.85, ease: "easeOut" }}
-      className="relative flex min-h-[100svh] items-end overflow-hidden px-4 pb-10 pt-28 sm:px-6 lg:px-8"
+      className="relative flex min-h-screen items-end overflow-hidden px-4 pb-10 pt-28 sm:px-6 lg:px-8"
     >
       <Image
         src={heroImage}

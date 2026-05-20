@@ -12,6 +12,7 @@ import FeaturesSection from "./components/FeaturesSection";
 import ProductCard from "./components/ProductCard";
 import SupportSection from "./components/SupportSection";
 import {
+  DEFAULT_WHATSAPP_PHONE,
   MENU_IMAGE_SCALE_STORAGE_KEY,
   MENU_ITEMS_STORAGE_KEY,
   WHATSAPP_PHONE_STORAGE_KEY,
@@ -20,6 +21,7 @@ import {
   buildMenuGroups,
   categories,
   getDefaultProducts,
+  getSafeMenuItems,
   restaurantInfo,
 } from "./data/menuData";
 
@@ -34,12 +36,14 @@ const normalizeSearch = (value: string) =>
     .trim();
 
 export default function HomePage() {
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(getDefaultProducts);
+  const [menuItems, setMenuItems] = useState<MenuItem[]>(() => getDefaultProducts());
   const [cart, setCart] = useState<CartLine[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<CategoryId>("breakfast");
+  const [activeCategory, setActiveCategory] = useState<CategoryId>(
+    categories?.[0]?.id ?? "breakfast"
+  );
   const [searchTerm, setSearchTerm] = useState("");
-  const [whatsappPhone, setWhatsappPhone] = useState("9647804000463");
+  const [whatsappPhone, setWhatsappPhone] = useState(DEFAULT_WHATSAPP_PHONE);
   const [imageScale, setImageScale] = useState(1);
 
   useEffect(() => {
@@ -51,9 +55,10 @@ export default function HomePage() {
 
       const savedItems = localStorage.getItem(MENU_ITEMS_STORAGE_KEY);
       if (savedItems) {
-        const parsed = JSON.parse(savedItems) as MenuItem[];
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setMenuItems(parsed);
+        const parsed = JSON.parse(savedItems);
+        const safeItems = getSafeMenuItems(parsed);
+        if (safeItems.length > 0) {
+          setMenuItems(safeItems);
         }
       }
 
@@ -61,15 +66,15 @@ export default function HomePage() {
       if (savedPhone?.trim()) {
         setWhatsappPhone(savedPhone.trim());
       } else {
-        localStorage.setItem(
-          WHATSAPP_PHONE_STORAGE_KEY,
-          "9647804000463"
-        );
+        localStorage.setItem(WHATSAPP_PHONE_STORAGE_KEY, DEFAULT_WHATSAPP_PHONE);
       }
     } catch {
-      // ignore invalid localStorage
+      setMenuItems(getDefaultProducts());
+      setWhatsappPhone(DEFAULT_WHATSAPP_PHONE);
     }
   }, []);
+
+  const safeMenuItems = Array.isArray(menuItems) && menuItems.length > 0 ? menuItems : getDefaultProducts();
 
   const cartCount = useMemo(
     () => cart.reduce((sum, item) => sum + item.quantity, 0),
@@ -78,7 +83,7 @@ export default function HomePage() {
 
   const filteredGroups = useMemo(() => {
     const query = normalizeSearch(searchTerm);
-    const groups = buildMenuGroups(menuItems);
+    const groups = buildMenuGroups(safeMenuItems);
 
     if (!query) {
       return groups;
@@ -87,19 +92,24 @@ export default function HomePage() {
     return groups
       .map((group) => ({
         ...group,
-        items: group.items.filter((item) => {
+        items: (group.items ?? []).filter((item) => {
           const target = normalizeSearch(
-            `${item.name} ${item.description} ${item.notes ?? ""}`
+            `${item.name ?? ""} ${item.description ?? ""} ${item.notes ?? ""}`
           );
           return target.includes(query);
         }),
       }))
-      .filter((group) => group.items.length > 0);
-  }, [menuItems, searchTerm]);
+      .filter((group) => (group.items ?? []).length > 0);
+  }, [safeMenuItems, searchTerm]);
+
+  const visibleGroups = useMemo(
+    () => filteredGroups.filter((group) => (group.items?.length ?? 0) > 0),
+    [filteredGroups]
+  );
 
   const resultCount = useMemo(
-    () => filteredGroups.reduce((sum, group) => sum + group.items.length, 0),
-    [filteredGroups]
+    () => visibleGroups.reduce((sum, group) => sum + (group.items?.length ?? 0), 0),
+    [visibleGroups]
   );
 
   const scrollToMenu = useCallback(() => {
@@ -192,10 +202,10 @@ export default function HomePage() {
   }, []);
 
   const hasSearch = searchTerm.trim().length > 0;
-  const menuCategories = [...categories];
+  const menuCategories = Array.isArray(categories) ? categories : [];
 
   return (
-    <main className="min-h-screen overflow-hidden bg-luxury-black text-white">
+    <main className="min-h-screen overflow-visible bg-luxury-black text-white">
       <Header
         categories={menuCategories}
         activeCategory={activeCategory}
@@ -208,8 +218,8 @@ export default function HomePage() {
 
       <FeaturesSection />
 
-      <section id="menu" className="relative px-4 py-14 sm:px-6 lg:px-8">
-        <div className="absolute inset-0 -z-10 bg-radial-green opacity-80" />
+      <section id="menu" className="relative overflow-visible px-4 py-14 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 -z-10 bg-radial-green/20" />
         <div className="mx-auto max-w-7xl">
           <div className="mb-8 grid gap-5 lg:grid-cols-[1fr_26rem] lg:items-end">
             <div>
@@ -262,7 +272,7 @@ export default function HomePage() {
             </p>
           ) : null}
 
-          {filteredGroups.length === 0 ? (
+          {visibleGroups.length === 0 ? (
             <div className="glass-panel mx-auto grid max-w-lg place-items-center rounded-[2rem] px-6 py-16 text-center">
               <div className="mb-5 grid h-16 w-16 place-items-center rounded-3xl bg-luxury-green/15 text-luxury-mint green-ring">
                 <Search size={28} />
@@ -274,7 +284,7 @@ export default function HomePage() {
             </div>
           ) : (
             <div className="space-y-16">
-              {filteredGroups.map((group) => (
+              {visibleGroups.map((group) => (
                 <section
                   key={group.category.id}
                   id={`category-${group.category.id}`}

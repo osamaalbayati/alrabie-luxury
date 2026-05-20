@@ -436,10 +436,31 @@ export function formatIQD(price: number): string {
 export const MENU_ITEMS_STORAGE_KEY = "alrabee_menu_items_v2";
 export const WHATSAPP_PHONE_STORAGE_KEY = "alrabee_whatsapp_phone_v2";
 export const MENU_IMAGE_SCALE_STORAGE_KEY = "alrabee_menu_image_scale_v1";
+export const DEFAULT_WHATSAPP_PHONE = "9647804000463";
 
 /**
  * Returns a fresh, mutable copy of the default products array.
  */
 export function getDefaultProducts(): MenuItem[] {
   return products.map((product) => ({ ...product }));
+}
+
+export function getSafeMenuItems(value: unknown): MenuItem[] {
+  if (!Array.isArray(value)) {
+    return getDefaultProducts();
+  }
+
+  const safeItems = value.filter((item) => {
+    return (
+      typeof item === "object" &&
+      item !== null &&
+      typeof (item as any).id === "string" &&
+      typeof (item as any).categoryId === "string" &&
+      typeof (item as any).name === "string" &&
+      typeof (item as any).description === "string" &&
+      typeof (item as any).price === "number"
+    );
+  }) as MenuItem[];
+
+  return safeItems.length > 0 ? safeItems : getDefaultProducts();
 }

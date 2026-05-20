@@ -39,7 +39,7 @@ const emptyCustomer: CustomerInfo = {
 
 export default function CartDrawer({
   isOpen,
-  items,
+  items = [],
   whatsappPhone,
   onClose,
   onIncrement,
@@ -47,20 +47,21 @@ export default function CartDrawer({
   onRemove,
 }: CartDrawerProps) {
   const [customer, setCustomer] = useState<CustomerInfo>(emptyCustomer);
+  const safeItems = Array.isArray(items) ? items : [];
 
   const total = useMemo(
     () =>
-      items.reduce(
+      safeItems.reduce(
         (sum, item) =>
           sum + (item.selectedOption?.price ?? item.product.price) * item.quantity,
         0
       ),
-    [items]
+    [safeItems]
   );
 
   const cartCount = useMemo(
-    () => items.reduce((sum, item) => sum + item.quantity, 0),
-    [items]
+    () => safeItems.reduce((sum, item) => sum + item.quantity, 0),
+    [safeItems]
   );
 
   useEffect(() => {
@@ -83,7 +84,7 @@ export default function CartDrawer({
   };
 
   const buildOrderText = () => {
-    const itemLines = items.map((item, index) => {
+    const itemLines = safeItems.map((item, index) => {
       const itemPrice = item.selectedOption?.price ?? item.product.price;
       const itemLabel = item.selectedOption
         ? `${item.product.name} (${item.selectedOption.label})`
@@ -142,7 +143,7 @@ export default function CartDrawer({
   };
 
   const sendOrder = () => {
-    if (items.length === 0) return;
+    if (safeItems.length === 0) return;
 
     const url = `${restaurantInfo.whatsappBaseUrl}/${whatsappPhone}?text=${encodeURIComponent(
       buildOrderText()
@@ -152,7 +153,7 @@ export default function CartDrawer({
   };
 
   const canOrder =
-    items.length > 0 &&
+    safeItems.length > 0 &&
     Boolean(customer.name.trim()) &&
     Boolean(customer.phone.trim()) &&
     Boolean(customer.address.trim());
@@ -197,7 +198,7 @@ export default function CartDrawer({
           </button>
         </div>
 
-        {items.length === 0 ? (
+        {safeItems.length === 0 ? (
           <div className="grid flex-1 place-items-center px-6 text-center">
             <div className="max-w-xs">
               <div className="mx-auto mb-5 grid h-20 w-20 place-items-center rounded-3xl border border-green-400/20 bg-green-400/10 text-green-300 shadow-[0_0_30px_rgba(34,197,94,0.15)]">
@@ -214,7 +215,7 @@ export default function CartDrawer({
             <div className="hide-scrollbar flex-1 overflow-y-auto px-5 py-5">
               <div className="space-y-3">
               <AnimatePresence initial={false}>
-                {items.map((item) => {
+                {safeItems.map((item) => {
                   const itemPrice = item.selectedOption?.price ?? item.product.price;
                   return (
                     <motion.div

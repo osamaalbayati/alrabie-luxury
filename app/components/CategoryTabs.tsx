@@ -13,11 +13,13 @@ export default function CategoryTabs({
   activeCategory,
   onSelect,
 }: CategoryTabsProps) {
+  const validCategories = Array.isArray(categories) ? categories : [];
+
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-7xl">
         <div className="hide-scrollbar flex gap-2 overflow-x-auto pb-2">
-          {categories.map((category) => {
+          {validCategories.map((category) => {
             const isActive = activeCategory === category.id;
 
             return (

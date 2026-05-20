@@ -12,15 +12,16 @@ type ProductCardProps = {
 };
 
 export default function ProductCard({ product, onAdd }: ProductCardProps) {
+  const validOptions = Array.isArray(product.options) ? product.options : [];
   const [selectedOptionId, setSelectedOptionId] = useState(
-    product.options?.[0]?.id ?? ""
+    validOptions[0]?.id ?? ""
   );
 
-  const selectedOption = product.options?.find(
+  const selectedOption = validOptions.find(
     (option) => option.id === selectedOptionId
   );
 
-  const productPrice = selectedOption?.price ?? product.price;
+  const productPrice = selectedOption?.price ?? product.price ?? 0;
 
   return (
     <motion.article
@@ -35,7 +36,7 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
         <div className="mb-4 flex items-start justify-between gap-3">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="text-xl font-black leading-8 text-white">{product.name}</h3>
+              <h3 className="text-xl font-black leading-8 text-white">{product.name ?? "منتج"}</h3>
               {product.badge ? (
                 <span className="inline-flex items-center gap-1 rounded-full border border-luxury-mint/35 bg-luxury-mint/12 px-2.5 py-1 text-xs font-extrabold text-luxury-mint">
                   <Sparkles size={12} />
@@ -54,15 +55,17 @@ export default function ProductCard({ product, onAdd }: ProductCardProps) {
           </div>
         </div>
 
-        <p className="mb-5 flex-1 text-sm leading-7 text-white/62">{product.description}</p>
+        <p className="mb-5 flex-1 text-sm leading-7 text-white/62">
+          {product.description ?? "وصف المنتج غير متوفر حالياً"}
+        </p>
 
-        {product.options ? (
+        {validOptions.length > 0 ? (
           <div className="mb-5">
             <p className="mb-3 text-sm font-black uppercase tracking-[0.24em] text-white/50">
               اختر
             </p>
             <div className="flex flex-wrap gap-2">
-              {product.options.map((option) => {
+              {validOptions.map((option) => {
                 const isActive = option.id === selectedOptionId;
                 return (
                   <motion.button
