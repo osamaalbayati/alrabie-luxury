@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cairo } from "next/font/google";
+import { MessageCircle } from "lucide-react";
+import { restaurantInfo } from "./data/menuData";
 import "./globals.css";
 
 const cairo = Cairo({
@@ -54,9 +56,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const whatsappUrl = `${restaurantInfo.whatsappBaseUrl}/${restaurantInfo.whatsappPhone}`;
+
   return (
     <html lang="ar" dir="rtl" className={cairo.variable}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="fixed bottom-6 left-6 z-50 inline-flex items-center gap-2 rounded-full bg-luxury-mint px-5 py-3 text-sm font-black text-luxury-black shadow-[0_20px_60px_rgba(16,185,129,0.18)] transition hover:scale-105 hover:bg-luxury-green"
+          aria-label="تواصل عبر واتساب"
+        >
+          <MessageCircle size={18} />
+          واتساب
+        </a>
+      </body>
     </html>
   );
 }

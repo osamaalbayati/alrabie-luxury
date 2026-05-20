@@ -282,13 +282,13 @@ export default function HomePage() {
                   data-category={group.category.id}
                   className="scroll-mt-36"
                 >
-                  <div className="group relative mb-6 min-h-[22rem] overflow-hidden rounded-[2rem] border border-white/10 bg-black/20 shadow-soft-lift transition duration-500 hover:-translate-y-1 sm:min-h-[28rem]">
+                  <div className="relative mb-6 min-h-[22rem] overflow-hidden rounded-[2rem] border border-white/10 shadow-soft-lift sm:min-h-[28rem]">
                     <Image
                       src={group.category.image}
                       alt={group.category.title}
                       fill
                       sizes="(min-width: 1024px) 1200px, 100vw"
-                      className="object-cover transition duration-700 will-change-transform group-hover:scale-110 group-hover:brightness-110"
+                      className="object-cover transition duration-700"
                       style={{ transform: `scale(${imageScale})` }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-transparent" />

@@ -52,6 +52,15 @@ export default function Footer() {
               توصيل داخل النجف
             </p>
           </div>
+          <a
+            href={`${restaurantInfo.whatsappBaseUrl}/${restaurantInfo.whatsappPhone}`}
+            target="_blank"
+            rel="noreferrer"
+            className="mt-6 inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-luxury-mint px-5 py-3 text-sm font-black text-luxury-black transition hover:bg-luxury-green"
+          >
+            <MessageCircle size={18} />
+            اطلب عبر واتساب الآن
+          </a>
         </div>
       </div>
 
