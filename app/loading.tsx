@@ -1,15 +1,19 @@
 export default function Loading() {
   return (
-    <main className="grid min-h-screen place-items-center bg-luxury-black px-6 text-white">
-      <div className="glass-panel green-ring flex w-full max-w-sm flex-col items-center gap-5 rounded-[2rem] p-8 text-center">
-        <div className="relative h-16 w-16 overflow-hidden rounded-full border border-white/15 bg-white/10">
-          <span className="absolute inset-x-3 top-1/2 h-px bg-luxury-mint shadow-green-glow" />
-          <span className="absolute inset-0 animate-shimmer bg-gradient-to-l from-transparent via-white/30 to-transparent" />
-        </div>
-        <div>
-          <p className="text-2xl font-black">الربيع</p>
-          <p className="mt-1 text-sm text-white/60">يتم تجهيز التجربة</p>
-        </div>
+    <main className="grid min-h-screen place-items-center bg-[#050505] px-6 text-white">
+      <div className="flex h-24 w-24 items-center justify-center rounded-full border border-luxury-mint bg-luxury-green/10 shadow-[0_0_40px_rgba(34,197,94,0.18)]">
+        <svg
+          className="h-12 w-12 animate-spin text-luxury-mint"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="12" cy="12" r="10" opacity="0.15" />
+          <path d="M22 12a10 10 0 0 1-10 10" />
+        </svg>
       </div>
     </main>
   );
